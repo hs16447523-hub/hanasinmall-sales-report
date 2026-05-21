@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>하나사인몰 일일매출보고서</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#f4f7fb;color:#1c2b3a;line-height:1.55;padding:24px}
+.wrap{max-width:900px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;padding:24px 28px;border-radius:12px;margin-bottom:24px;box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.hdr h1{font-size:1.8rem;margin-bottom:6px}
+.hdr p{font-size:.95rem;opacity:.9}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:#fff;border-radius:10px;padding:24px;border:1px solid #e0e8f0;box-shadow:0 2px 10px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.card h2{color:#1a3a5c;font-size:1.3rem;margin-bottom:8px}
+.card p{color:#6b7f8f;font-size:.88rem;margin-bottom:14px}
+.card .num{font-size:2.2rem;font-weight:700;color:#1a7a3c;margin-bottom:12px;line-height:1}
+.btn{display:inline-block;background:#1a3a5c;color:#fff;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:.92rem;font-weight:500}
+.btn:hover{background:#2e6da4}
+.foot{text-align:center;color:#6b7f8f;font-size:.82rem;margin-top:28px;padding:16px}
+</style></head>
+<body><div class="wrap">
+<div class="hdr"><h1>📊 하나사인몰 일일매출보고서</h1><p>법인(하나사인몰) + 개인사업자(하나몰) 통합 일보 · 2026-05-21 기준</p></div>
+<div class="grid">
+  <div class="card">
+    <h2>📅 5월 보고서</h2>
+    <p>2026년 5월 일일매출보고서</p>
+    <div class="num">13<span style="font-size:1rem;color:#6b7f8f;font-weight:400">개</span></div>
+    <a class="btn" href="./reports/may/_index.html">5월 인덱스 →</a>
+  </div>
+  <div class="card">
+    <h2>📅 4월 보고서</h2>
+    <p>2026년 4월 일일매출보고서</p>
+    <div class="num">22<span style="font-size:1rem;color:#6b7f8f;font-weight:400">개</span></div>
+    <a class="btn" href="./reports/april/_index.html">4월 인덱스 →</a>
+  </div>
+</div>
+<div class="foot">하나사인몰 웹팀 · 자동 생성 · v8.5</div>
+</div></body></html>
