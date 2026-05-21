@@ -1,0 +1,172 @@
+<!DOCTYPE html><html lang='ko'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>일일매출보고서 4월 인덱스</title><style>
+:root{--p:#1a3a5c;--p2:#2e6da4;--acc:#e8f0fa;--bd:#c8d8e8;--g:#1a7a3c;--gbg:#eaf7ee;--r:#c0392b;--rbg:#fdf0ee;--o:#d35400;--obg:#fef5ec;--y:#fffbe6;--tx:#1c2b3a;--mu:#6b7f8f;--sh:0 2px 8px rgba(0,0,0,.09)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,sans-serif;background:#eef3f8;color:var(--tx);font-size:13px;line-height:1.5;-webkit-text-size-adjust:100%}
+.hdr{background:linear-gradient(135deg,var(--p) 0%,var(--p2) 100%);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:18px;font-weight:700}
+.hdr p{font-size:11px;opacity:.78;margin-top:3px}
+.hdr .right{text-align:right}
+.hdr .right .d{font-size:14px;font-weight:600}
+.hdr .right .b{font-size:10px;opacity:.7;margin-top:2px}
+.hdr .btn{padding:6px 11px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);color:#fff;border-radius:5px;cursor:pointer;font-size:11px;margin-left:5px;font-family:inherit}
+.hdr .btn:hover{background:rgba(255,255,255,.32)}
+.main{padding:14px 18px;max-width:1280px;margin:0 auto}
+/* v7.0 법인/개인 탭 — 페이지 분리 */
+.tab-nav{display:flex;gap:0;margin:6px 0 0;position:sticky;top:0;z-index:100;background:#f4f7fb;padding:10px 0 12px}
+.tab-btn{flex:1;padding:18px 22px;border:2px solid;background:#fff;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-.3px;transition:all .15s;font-family:inherit}
+.tab-btn.corp{border-color:#1a3a5c;color:#1a3a5c;border-radius:10px 0 0 10px}
+.tab-btn.personal{border-color:#d35400;color:#d35400;border-radius:0 10px 10px 0;border-left:none}
+.tab-btn.corp.active{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;box-shadow:0 4px 14px rgba(26,58,92,.3)}
+.tab-btn.personal.active{background:linear-gradient(135deg,#d35400 0%,#e67e22 100%);color:#fff;box-shadow:0 4px 14px rgba(211,84,0,.3);border-left:2px solid #d35400}
+.tab-btn:hover:not(.active){background:#eef3f9}
+.tab-btn .em{font-size:18px;margin-right:8px}
+.tab-btn .sub{display:block;font-size:10px;font-weight:500;opacity:.75;margin-top:3px;letter-spacing:0}
+.tab-content{display:none;animation:fadeIn .25s ease;padding-top:6px}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{.tab-nav{display:none}.tab-content{display:block !important;page-break-after:always}.tab-content:last-of-type{page-break-after:auto}}
+@media (max-width:600px){.tab-btn{font-size:12px;padding:12px 8px}.tab-btn .em{font-size:14px;margin-right:4px}.tab-btn .sub{font-size:9px}}
+
+.section-banner{margin:18px 0 12px;padding:14px 20px;border-radius:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 4px 14px rgba(0,0,0,.15);position:sticky;top:0;z-index:10;border:2px solid transparent}
+.section-banner.section-corp{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;border-color:#0f2440}
+.section-banner.section-personal{background:linear-gradient(135deg,#d35400 0%,#e67e22 100%);color:#fff;border-color:#a04000}
+.section-banner .sb-emoji{font-size:24px}
+.section-banner .sb-title{font-size:17px;font-weight:800;letter-spacing:-.5px}
+.section-banner .sb-sub{font-size:11px;opacity:.85;margin-left:auto;background:rgba(255,255,255,.15);padding:5px 11px;border-radius:14px}
+.bcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px;margin-bottom:14px}
+.bcard{background:#fff;border-radius:10px;padding:12px 14px;box-shadow:var(--sh);border-top:3px solid var(--p)}
+.bcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.bgubun{padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;color:#fff}
+.bname{font-size:13px;font-weight:700;color:var(--p)}
+.bacct{font-size:10px;color:var(--mu);margin-left:auto}
+.bcard-body{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;align-items:center}
+.bclabel{font-size:10px;color:var(--mu);font-weight:500;margin-bottom:3px}
+.bcvalue{font-size:14px;font-weight:700;color:var(--p);font-variant-numeric:tabular-nums}
+.bcvalue.main{font-size:16px}
+.bcvalue .unit{font-size:9px;font-weight:500;opacity:.7}
+.bcvalue-flow{display:flex;flex-direction:column;gap:2px}
+.bcvalue-flow span{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.bcdiff{font-size:10px;font-weight:600;margin-top:2px}
+.flow-cell{background:#f5f9fd;padding:6px 8px;border-radius:5px}
+.in-amt{color:var(--g)}.out-amt{color:var(--r)}
+.block{background:#fff;border-radius:10px;box-shadow:var(--sh);padding:14px 16px;margin-bottom:14px}
+.block-title{font-size:14px;font-weight:700;color:var(--p);margin-bottom:11px;padding-bottom:8px;border-bottom:2px solid var(--acc);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.block-title.personal{border-color:#fdebd6;color:var(--o)}
+.block-sub{margin-left:auto;font-size:13px;color:var(--p2);font-weight:700}
+.sub-title{font-size:12px;font-weight:600;color:var(--p);margin:12px 0 6px}
+.ssec{margin-bottom:12px}
+.ssec-hdr{padding:7px 12px;color:#fff;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.ssec-title{font-size:12px;font-weight:600}
+.ssec-meta{font-size:12px;font-weight:700}
+.ssec-meta strong{color:#9dd4ff}
+.ssec-empty{padding:9px 12px;color:var(--mu);font-style:italic;background:#f7faff;border-radius:5px;font-size:12px}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ssec-tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-top:none;font-size:12px;min-width:480px}
+/* v7.7 매출 카테고리 표만 컬럼 폭 고정 (카드·은행·분석 표는 원래 가변 폭 유지) */
+.ssec-tbl.ssec-sales{table-layout:fixed}
+.ssec-tbl.ssec-sales th:nth-child(1),.ssec-tbl.ssec-sales td:nth-child(1){width:170px;white-space:normal;word-break:keep-all}
+.ssec-tbl.ssec-sales th:nth-child(2),.ssec-tbl.ssec-sales td:nth-child(2){width:60px;text-align:center}
+.ssec-tbl.ssec-sales th:nth-child(3),.ssec-tbl.ssec-sales td:nth-child(3){width:115px}
+.ssec-tbl th{background:var(--acc);padding:6px 8px;font-size:11px;font-weight:600;color:var(--p);text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+.ssec-tbl td{padding:5px 8px;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:middle}
+.ssec-tbl td.amt,.ssec-tbl td.amt-main{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.ssec-tbl td.amt-main{color:var(--p);font-weight:700}
+.ssec-tbl td.rank{text-align:center;font-weight:600;color:var(--p2);width:34px}
+.ssec-tbl td.cnt{text-align:center;font-size:11px;color:var(--mu);width:50px}
+.ssec-tbl tr:hover td{background:#fafdff}
+.ssec-tbl tr:last-child td{border-bottom:none}
+.cat-extra{background:#fafbfc}
+.dexp{font-size:11px}
+.dexp summary{cursor:pointer;color:var(--p2);font-weight:600;list-style:none;padding:3px 7px;background:#f5faff;border-radius:4px;display:inline-block;font-size:10px}
+.dexp summary::-webkit-details-marker{display:none}
+.dexp summary::before{content:'▶ ';color:var(--p2);margin-right:2px}
+.dexp[open] summary::before{content:'▼ '}
+.dtl{width:100%;border-collapse:collapse;font-size:11px;margin-top:5px;background:#f9fbfe;border-radius:5px;overflow:hidden;min-width:380px}
+.dtl th{background:#dde6f0;padding:4px 7px;font-weight:600;color:var(--p);text-align:left}
+.dtl td{padding:3px 7px;border-bottom:1px solid #e6ecf3;word-break:break-all}
+.dtl td.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+/* v7.4 매출상세 4컬럼 정렬 (채널/품명/거래처/금액) */
+/* v7.6 매출상세 컬럼 비율 1:4:3:2 (총 10) — 비율 초과 텍스트는 잘림(...) + hover 시 tooltip */
+.dtl-sales{table-layout:fixed;width:100%}
+.dtl-sales col.c-ch{width:10%}
+.dtl-sales col.c-mer{width:40%}
+.dtl-sales col.c-bz{width:30%}
+.dtl-sales col.c-amt{width:20%}
+.dtl-sales td,.dtl-sales th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dtl-sales th:nth-child(4),.dtl-sales td:nth-child(4){text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.dtl-sales th:nth-child(3),.dtl-sales td:nth-child(3){font-size:10px;color:#445}
+.dtl-sales td[title]{cursor:help}
+.cat-badge{display:inline-block;padding:1px 5px;background:#eef5fc;color:var(--p2);border-radius:4px;font-size:9px;font-weight:600;margin-left:3px}
+.cat-tag{font-weight:600;color:var(--o)}
+.bank-meta{padding:8px 12px;background:#f5f9fd;border-radius:6px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:11px;flex-wrap:wrap;gap:5px}
+.inflow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:12px;border-left:4px solid var(--g);background:linear-gradient(to right,var(--gbg),transparent 50%);border-radius:0 7px 7px 0;padding:12px 14px}
+.inflow-cell{background:#fff;border-radius:6px;padding:10px 12px;border:1px solid var(--bd)}
+.inflow-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px}
+.inflow-amount{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.inflow-cnt{font-size:10px;color:var(--mu);margin-bottom:6px}
+.outflow-section{margin-top:10px;border-left:4px solid var(--r);padding:10px 12px;background:linear-gradient(to right,var(--rbg),transparent 50%);border-radius:0 7px 7px 0}
+.om-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:5px;min-width:380px}
+.om-tbl th{background:#f5f9fd;padding:4px 7px;border-bottom:1px solid var(--bd);font-weight:600;text-align:left}
+.om-tbl td{padding:4px 7px;border-bottom:1px solid #eef2f7}
+.card-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:10px}
+.card-cell-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--bd)}
+.card-no code{font-family:monospace;font-size:10px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--p2)}
+.block.analysis{background:#fafdff}
+.analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px;margin-bottom:12px}
+.analysis-cell{background:#fff;border-radius:6px;padding:11px 12px;border:1px solid var(--bd)}
+.analysis-cell-wide{grid-column:1/-1}
+.om-matrix{font-size:11px;min-width:900px}
+.om-matrix th{background:#dde6f0;text-align:center;padding:6px 4px;font-size:10px;white-space:nowrap}
+.om-matrix td{padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.om-matrix td.ch-name{text-align:left;font-weight:700;color:var(--p);background:#f5f9fd}
+.om-matrix td.tot,.om-matrix th.tot{font-weight:700;color:var(--p);background:#eef5fc}
+.om-matrix td.amt{font-size:10.5px}
+.om-matrix tr.om-total td{background:#dceaf7;font-weight:700;color:var(--p);border-top:2px solid var(--p)}
+.ac-hdr{font-size:11px;font-weight:700;color:var(--p);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.bar{display:flex;height:16px;border-radius:3px;overflow:hidden;width:100%;min-width:140px}
+.bar > div{font-size:8px;color:#fff;text-align:center;line-height:16px;font-weight:600}
+.bar-bs{background:var(--p)}.bar-ye{background:var(--g)}.bar-op{background:var(--o)}
+.m-name{font-weight:700;color:var(--p);font-size:12px}
+.roi{text-align:center;font-size:13px;color:var(--g)}
+.notes{background:var(--y);border-left:4px solid #f0c040;border-radius:6px;padding:10px 13px;margin-top:12px}
+.notes h3{font-size:12px;font-weight:700;color:#8a6d00;margin-bottom:6px}
+.notes ul{list-style:none;padding:0}
+.notes li{font-size:11px;color:#5a4500;padding:3px 0}
+.foot{text-align:center;color:var(--mu);font-size:10px;padding:14px}
+.idx-tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:9px;overflow:hidden;box-shadow:var(--sh)}
+.idx-tbl th{background:var(--p);color:#fff;padding:9px 11px;font-size:11px;text-align:left}
+.idx-tbl td{padding:8px 11px;font-size:12px;border-bottom:1px solid #eef2f7}
+.idx-tbl tr:hover td{background:#fafdff}
+.idx-tbl a{color:var(--p2);text-decoration:none;font-weight:600}
+.idx-tbl a:hover{text-decoration:underline}
+.idx-tbl .kind{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#e8f0fa;color:var(--p)}
+
+@media (max-width: 768px) {
+  html{font-size:13px}
+  .main{padding:10px 12px}
+  .hdr h1{font-size:15px}
+  .hdr .right{flex-basis:100%;text-align:left;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+  .hdr .btn{padding:5px 9px;font-size:10px;margin-left:0;margin-right:5px}
+  .bcards{grid-template-columns:1fr}
+  .bcard-body{grid-template-columns:1fr 1fr;gap:7px}
+  .flow-cell{grid-column:span 2}
+  .block{padding:10px 12px}
+  .block-title{font-size:13px}
+  .block-sub{margin-left:0;width:100%;font-size:12px}
+  .inflow-grid{grid-template-columns:1fr;padding:10px}
+  .card-grid{grid-template-columns:1fr}
+  .analysis-grid{grid-template-columns:1fr}
+}
+@media (max-width: 480px) {
+  .bcard-body{grid-template-columns:1fr}
+  .flow-cell{grid-column:span 1}
+}
+@media print{
+  body{background:#fff}
+  .hdr{-webkit-print-color-adjust:exact}
+  .btn{display:none!important}
+  .block,.bcard,.analysis-cell,.inflow-cell{box-shadow:0 0 0 1px #ccc;page-break-inside:avoid}
+  .main{padding:6px;max-width:none}
+}
+</style></head><body><div class='hdr'><div><h1>일일매출보고서 인덱스 - 4월</h1><p>2026년 4월 - v8.5</p></div><div class='right'><div class='d'>2026-05-21 기준</div></div></div><div class='main'><div class='tbl-wrap'><table class='idx-tbl'><thead><tr><th>구분</th><th>일자</th><th>실제 일자</th><th>크기</th><th>열기</th></tr></thead><tbody><tr><td><span class='kind'>일자</span></td><td><strong>4-1~2</strong></td><td>2026-04-01 ~ 2026-04-02</td><td>88561 bytes</td><td><a href='일일매출보고서_4월_4-1~2.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-3~5</strong></td><td>2026-04-03 ~ 2026-04-05</td><td>69093 bytes</td><td><a href='일일매출보고서_4월_4-3~5.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-6</strong></td><td>2026-04-06</td><td>73965 bytes</td><td><a href='일일매출보고서_4월_4-6.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-7</strong></td><td>2026-04-07</td><td>77377 bytes</td><td><a href='일일매출보고서_4월_4-7.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-8</strong></td><td>2026-04-08</td><td>69396 bytes</td><td><a href='일일매출보고서_4월_4-8.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-9</strong></td><td>2026-04-09</td><td>64242 bytes</td><td><a href='일일매출보고서_4월_4-9.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-10</strong></td><td>2026-04-10 ~ 2026-04-12</td><td>88162 bytes</td><td><a href='일일매출보고서_4월_4-10.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-13</strong></td><td>2026-04-13</td><td>70029 bytes</td><td><a href='일일매출보고서_4월_4-13.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-14</strong></td><td>2026-04-14</td><td>63782 bytes</td><td><a href='일일매출보고서_4월_4-14.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-15</strong></td><td>2026-04-15</td><td>68084 bytes</td><td><a href='일일매출보고서_4월_4-15.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-16</strong></td><td>2026-04-16</td><td>61243 bytes</td><td><a href='일일매출보고서_4월_4-16.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-17~19</strong></td><td>2026-04-17 ~ 2026-04-19</td><td>62206 bytes</td><td><a href='일일매출보고서_4월_4-17~19.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-20</strong></td><td>2026-04-20</td><td>67102 bytes</td><td><a href='일일매출보고서_4월_4-20.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-21</strong></td><td>2026-04-21</td><td>65037 bytes</td><td><a href='일일매출보고서_4월_4-21.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-22</strong></td><td>2026-04-22</td><td>67065 bytes</td><td><a href='일일매출보고서_4월_4-22.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-23</strong></td><td>2026-04-23</td><td>67851 bytes</td><td><a href='일일매출보고서_4월_4-23.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-24~26</strong></td><td>2026-04-24 ~ 2026-04-26</td><td>71061 bytes</td><td><a href='일일매출보고서_4월_4-24~26.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-27</strong></td><td>2026-04-27</td><td>78248 bytes</td><td><a href='일일매출보고서_4월_4-27.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-28</strong></td><td>2026-04-28</td><td>64661 bytes</td><td><a href='일일매출보고서_4월_4-28.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-29</strong></td><td>2026-04-29</td><td>71510 bytes</td><td><a href='일일매출보고서_4월_4-29.html' target='_blank'>열기</a></td></tr><tr><td><span class='kind'>일자</span></td><td><strong>4-30~5-3</strong></td><td>2026-04-30 ~ 2026-05-03</td><td>78714 bytes</td><td><a href='일일매출보고서_4월_4-30~5-3.html' target='_blank'>열기</a></td></tr></tbody></table></div><div class='foot'>v7.8 4월 + 오픈마켓 매트릭스</div></div></body></html>
