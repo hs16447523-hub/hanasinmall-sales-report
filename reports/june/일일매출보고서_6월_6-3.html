@@ -1,0 +1,261 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>하나사인몰·하나몰 일일매출보고서 · 6-3</title><style>
+:root{--p:#1a3a5c;--p2:#2e6da4;--acc:#e8f0fa;--bd:#c8d8e8;--g:#1a7a3c;--gbg:#eaf7ee;--r:#c0392b;--rbg:#fdf0ee;--o:#d35400;--obg:#fef5ec;--y:#fffbe6;--tx:#1c2b3a;--mu:#6b7f8f;--sh:0 2px 8px rgba(0,0,0,.09)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,sans-serif;background:#eef3f8;color:var(--tx);font-size:13px;line-height:1.5;-webkit-text-size-adjust:100%}
+.hdr{background:linear-gradient(135deg,var(--p) 0%,var(--p2) 100%);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:18px;font-weight:700}
+.hdr p{font-size:11px;opacity:.78;margin-top:3px}
+.hdr .right{text-align:right}
+.hdr .right .d{font-size:14px;font-weight:600}
+.hdr .right .b{font-size:10px;opacity:.7;margin-top:2px}
+.hdr .btn{padding:6px 11px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.18);color:#fff;border-radius:5px;cursor:pointer;font-size:11px;margin-left:5px;font-family:inherit}
+.hdr .btn:hover{background:rgba(255,255,255,.32)}
+.main{padding:14px 18px;max-width:1280px;margin:0 auto}
+/* v7.0 법인/개인 탭 — 페이지 분리 */
+.tab-nav{display:flex;gap:0;margin:6px 0 0;position:sticky;top:0;z-index:100;background:#f4f7fb;padding:10px 0 12px}
+.tab-btn{flex:1;padding:18px 22px;border:2px solid;background:#fff;cursor:pointer;font-size:15px;font-weight:800;letter-spacing:-.3px;transition:all .15s;font-family:inherit}
+.tab-btn.corp{border-color:#1a3a5c;color:#1a3a5c;border-radius:10px 0 0 10px}
+.tab-btn.personal{border-color:#d35400;color:#d35400;border-radius:0 10px 10px 0;border-left:none}
+.tab-btn.corp.active{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;box-shadow:0 4px 14px rgba(26,58,92,.3)}
+.tab-btn.personal.active{background:linear-gradient(135deg,#d35400 0%,#e67e22 100%);color:#fff;box-shadow:0 4px 14px rgba(211,84,0,.3);border-left:2px solid #d35400}
+.tab-btn:hover:not(.active){background:#eef3f9}
+.tab-btn .em{font-size:18px;margin-right:8px}
+.tab-btn .sub{display:block;font-size:10px;font-weight:500;opacity:.75;margin-top:3px;letter-spacing:0}
+.tab-content{display:none;animation:fadeIn .25s ease;padding-top:6px}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media print{.tab-nav{display:none}.tab-content{display:block !important;page-break-after:always}.tab-content:last-of-type{page-break-after:auto}}
+@media (max-width:600px){.tab-btn{font-size:12px;padding:12px 8px}.tab-btn .em{font-size:14px;margin-right:4px}.tab-btn .sub{font-size:9px}}
+
+.section-banner{margin:18px 0 12px;padding:14px 20px;border-radius:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 4px 14px rgba(0,0,0,.15);position:sticky;top:0;z-index:10;border:2px solid transparent}
+.section-banner.section-corp{background:linear-gradient(135deg,#1a3a5c 0%,#2e6da4 100%);color:#fff;border-color:#0f2440}
+.section-banner.section-personal{background:linear-gradient(135deg,#d35400 0%,#e67e22 100%);color:#fff;border-color:#a04000}
+.section-banner .sb-emoji{font-size:24px}
+.section-banner .sb-title{font-size:17px;font-weight:800;letter-spacing:-.5px}
+.section-banner .sb-sub{font-size:11px;opacity:.85;margin-left:auto;background:rgba(255,255,255,.15);padding:5px 11px;border-radius:14px}
+.bcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px;margin-bottom:14px}
+.bcard{background:#fff;border-radius:10px;padding:12px 14px;box-shadow:var(--sh);border-top:3px solid var(--p)}
+.bcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.bgubun{padding:2px 7px;border-radius:8px;font-size:10px;font-weight:700;color:#fff}
+.bname{font-size:13px;font-weight:700;color:var(--p)}
+.bacct{font-size:10px;color:var(--mu);margin-left:auto}
+.bcard-body{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;align-items:center}
+.bclabel{font-size:10px;color:var(--mu);font-weight:500;margin-bottom:3px}
+.bcvalue{font-size:14px;font-weight:700;color:var(--p);font-variant-numeric:tabular-nums}
+.bcvalue.main{font-size:16px}
+.bcvalue .unit{font-size:9px;font-weight:500;opacity:.7}
+.bcvalue-flow{display:flex;flex-direction:column;gap:2px}
+.bcvalue-flow span{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+.bcdiff{font-size:10px;font-weight:600;margin-top:2px}
+.flow-cell{background:#f5f9fd;padding:6px 8px;border-radius:5px}
+.in-amt{color:var(--g)}.out-amt{color:var(--r)}
+.block{background:#fff;border-radius:10px;box-shadow:var(--sh);padding:14px 16px;margin-bottom:14px}
+.block-title{font-size:14px;font-weight:700;color:var(--p);margin-bottom:11px;padding-bottom:8px;border-bottom:2px solid var(--acc);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.block-title.personal{border-color:#fdebd6;color:var(--o)}
+.block-sub{margin-left:auto;font-size:13px;color:var(--p2);font-weight:700}
+.sub-title{font-size:12px;font-weight:600;color:var(--p);margin:12px 0 6px}
+.ssec{margin-bottom:12px}
+.ssec-hdr{padding:7px 12px;color:#fff;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.ssec-title{font-size:12px;font-weight:600}
+.ssec-meta{font-size:12px;font-weight:700}
+.ssec-meta strong{color:#9dd4ff}
+.ssec-empty{padding:9px 12px;color:var(--mu);font-style:italic;background:#f7faff;border-radius:5px;font-size:12px}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ssec-tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-top:none;font-size:12px;min-width:480px}
+/* v7.7 매출 카테고리 표만 컬럼 폭 고정 (카드·은행·분석 표는 원래 가변 폭 유지) */
+.ssec-tbl.ssec-sales{table-layout:fixed}
+.ssec-tbl.ssec-sales th:nth-child(1),.ssec-tbl.ssec-sales td:nth-child(1){width:170px;white-space:normal;word-break:keep-all}
+.ssec-tbl.ssec-sales th:nth-child(2),.ssec-tbl.ssec-sales td:nth-child(2){width:60px;text-align:center}
+.ssec-tbl.ssec-sales th:nth-child(3),.ssec-tbl.ssec-sales td:nth-child(3){width:115px}
+.ssec-tbl th{background:var(--acc);padding:6px 8px;font-size:11px;font-weight:600;color:var(--p);text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+.ssec-tbl td{padding:5px 8px;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:middle}
+.ssec-tbl td.amt,.ssec-tbl td.amt-main{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.ssec-tbl td.amt-main{color:var(--p);font-weight:700}
+.ssec-tbl td.rank{text-align:center;font-weight:600;color:var(--p2);width:34px}
+.ssec-tbl td.cnt{text-align:center;font-size:11px;color:var(--mu);width:50px}
+.ssec-tbl tr:hover td{background:#fafdff}
+.ssec-tbl tr:last-child td{border-bottom:none}
+.cat-extra{background:#fafbfc}
+.dexp{font-size:11px}
+.dexp summary{cursor:pointer;color:var(--p2);font-weight:600;list-style:none;padding:3px 7px;background:#f5faff;border-radius:4px;display:inline-block;font-size:10px}
+.dexp summary::-webkit-details-marker{display:none}
+.dexp summary::before{content:'▶ ';color:var(--p2);margin-right:2px}
+.dexp[open] summary::before{content:'▼ '}
+.dtl{width:100%;border-collapse:collapse;font-size:11px;margin-top:5px;background:#f9fbfe;border-radius:5px;overflow:hidden;min-width:380px}
+.dtl th{background:#dde6f0;padding:4px 7px;font-weight:600;color:var(--p);text-align:left}
+.dtl td{padding:3px 7px;border-bottom:1px solid #e6ecf3;word-break:break-all}
+.dtl td.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+/* v7.4 매출상세 4컬럼 정렬 (채널/품명/거래처/금액) */
+/* v7.6 매출상세 컬럼 비율 1:4:3:2 (총 10) — 비율 초과 텍스트는 잘림(...) + hover 시 tooltip */
+.dtl-sales{table-layout:fixed;width:100%}
+.dtl-sales col.c-ch{width:10%}
+.dtl-sales col.c-mer{width:40%}
+.dtl-sales col.c-bz{width:30%}
+.dtl-sales col.c-amt{width:20%}
+.dtl-sales td,.dtl-sales th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dtl-sales th:nth-child(4),.dtl-sales td:nth-child(4){text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.dtl-sales th:nth-child(3),.dtl-sales td:nth-child(3){font-size:10px;color:#445}
+.dtl-sales td[title]{cursor:help}
+.cat-badge{display:inline-block;padding:1px 5px;background:#eef5fc;color:var(--p2);border-radius:4px;font-size:9px;font-weight:600;margin-left:3px}
+.cat-tag{font-weight:600;color:var(--o)}
+.bank-meta{padding:8px 12px;background:#f5f9fd;border-radius:6px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:11px;flex-wrap:wrap;gap:5px}
+.inflow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:12px;border-left:4px solid var(--g);background:linear-gradient(to right,var(--gbg),transparent 50%);border-radius:0 7px 7px 0;padding:12px 14px}
+.inflow-cell{background:#fff;border-radius:6px;padding:10px 12px;border:1px solid var(--bd)}
+.inflow-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px}
+.inflow-amount{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.inflow-cnt{font-size:10px;color:var(--mu);margin-bottom:6px}
+.outflow-section{margin-top:10px;border-left:4px solid var(--r);padding:10px 12px;background:linear-gradient(to right,var(--rbg),transparent 50%);border-radius:0 7px 7px 0}
+.om-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:5px;min-width:380px}
+.om-tbl th{background:#f5f9fd;padding:4px 7px;border-bottom:1px solid var(--bd);font-weight:600;text-align:left}
+.om-tbl td{padding:4px 7px;border-bottom:1px solid #eef2f7}
+.card-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:10px}
+.card-cell-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--bd)}
+.card-no code{font-family:monospace;font-size:10px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--p2)}
+.block.analysis{background:#fafdff}
+.analysis-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:10px;margin-bottom:12px}
+.analysis-cell{background:#fff;border-radius:6px;padding:11px 12px;border:1px solid var(--bd)}
+.analysis-cell-wide{grid-column:1/-1}
+.om-matrix{font-size:11px;min-width:900px}
+.om-matrix th{background:#dde6f0;text-align:center;padding:6px 4px;font-size:10px;white-space:nowrap}
+.om-matrix td{padding:4px 6px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.om-matrix td.ch-name{text-align:left;font-weight:700;color:var(--p);background:#f5f9fd}
+.om-matrix td.tot,.om-matrix th.tot{font-weight:700;color:var(--p);background:#eef5fc}
+.om-matrix td.amt{font-size:10.5px}
+.om-matrix tr.om-total td{background:#dceaf7;font-weight:700;color:var(--p);border-top:2px solid var(--p)}
+.ac-hdr{font-size:11px;font-weight:700;color:var(--p);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.bar{display:flex;height:16px;border-radius:3px;overflow:hidden;width:100%;min-width:140px}
+.bar > div{font-size:8px;color:#fff;text-align:center;line-height:16px;font-weight:600}
+.bar-bs{background:var(--p)}.bar-ye{background:var(--g)}.bar-op{background:var(--o)}
+.m-name{font-weight:700;color:var(--p);font-size:12px}
+.roi{text-align:center;font-size:13px;color:var(--g)}
+.notes{background:var(--y);border-left:4px solid #f0c040;border-radius:6px;padding:10px 13px;margin-top:12px}
+.notes h3{font-size:12px;font-weight:700;color:#8a6d00;margin-bottom:6px}
+.notes ul{list-style:none;padding:0}
+.notes li{font-size:11px;color:#5a4500;padding:3px 0}
+.foot{text-align:center;color:var(--mu);font-size:10px;padding:14px}
+.idx-tbl{width:100%;border-collapse:collapse;background:#fff;border-radius:9px;overflow:hidden;box-shadow:var(--sh)}
+.idx-tbl th{background:var(--p);color:#fff;padding:9px 11px;font-size:11px;text-align:left}
+.idx-tbl td{padding:8px 11px;font-size:12px;border-bottom:1px solid #eef2f7}
+.idx-tbl tr:hover td{background:#fafdff}
+.idx-tbl a{color:var(--p2);text-decoration:none;font-weight:600}
+.idx-tbl a:hover{text-decoration:underline}
+.idx-tbl .kind{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#e8f0fa;color:var(--p)}
+
+@media (max-width: 768px) {
+  html{font-size:13px}
+  .main{padding:10px 12px}
+  .hdr h1{font-size:15px}
+  .hdr .right{flex-basis:100%;text-align:left;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+  .hdr .btn{padding:5px 9px;font-size:10px;margin-left:0;margin-right:5px}
+  .bcards{grid-template-columns:1fr}
+  .bcard-body{grid-template-columns:1fr 1fr;gap:7px}
+  .flow-cell{grid-column:span 2}
+  .block{padding:10px 12px}
+  .block-title{font-size:13px}
+  .block-sub{margin-left:0;width:100%;font-size:12px}
+  .inflow-grid{grid-template-columns:1fr;padding:10px}
+  .card-grid{grid-template-columns:1fr}
+  .analysis-grid{grid-template-columns:1fr}
+}
+@media (max-width: 480px) {
+  .bcard-body{grid-template-columns:1fr}
+  .flow-cell{grid-column:span 1}
+}
+@media print{
+  body{background:#fff}
+  .hdr{-webkit-print-color-adjust:exact}
+  .btn{display:none!important}
+  .block,.bcard,.analysis-cell,.inflow-cell{box-shadow:0 0 0 1px #ccc;page-break-inside:avoid}
+  .main{padding:6px;max-width:none}
+}
+</style></head><body><div class="hdr"><div><h1>📊 하나사인몰 · 하나몰 일일매출보고서</h1><p>법인+개인 통합 · 6-3</p></div><div class="right"><div class="d">2026-06-03</div><div class="b">웹팀 자동 생성</div><button class="btn" onclick="window.print()">🖨 인쇄</button><button class="btn" onclick="document.querySelectorAll('details').forEach(d=>d.open=true)">▼ 펼치기</button><button class="btn" onclick="document.querySelectorAll('details').forEach(d=>d.open=false)">▲ 접기</button></div></div><div class="main"><div class="bcards"><div class="bcard">
+          <div class="bcard-hdr">
+            <span class="bgubun" style="background:#1a3a5c">법인</span>
+            <span class="bname">국민은행</span>
+            <span class="bacct">655201-01-650555</span>
+          </div>
+          <div class="bcard-body">
+            <div><div class="bclabel">전일이월잔액</div><div class="bcvalue">269,232,019 <span class="unit">원</span></div></div>
+            <div class="flow-cell"><div class="bclabel">당일 발생액</div><div class="bcvalue-flow"><span class="in-amt">+94,500</span><span class="out-amt">−0</span></div></div>
+            <div><div class="bclabel">당일 잔액</div><div class="bcvalue main">269,326,519 <span class="unit">원</span></div><div class="bcdiff" style="color:#1a7a3c">+94,500원 ▲</div></div>
+          </div></div><div class="bcard">
+          <div class="bcard-hdr">
+            <span class="bgubun" style="background:#1a3a5c">법인</span>
+            <span class="bname">기업은행</span>
+            <span class="bacct">414-103095-04-012</span>
+          </div>
+          <div class="bcard-body">
+            <div><div class="bclabel">전일이월잔액</div><div class="bcvalue">19,065,384 <span class="unit">원</span></div></div>
+            <div class="flow-cell"><div class="bclabel">당일 발생액</div><div class="bcvalue-flow"><span class="in-amt">+0</span><span class="out-amt">−0</span></div></div>
+            <div><div class="bclabel">당일 잔액</div><div class="bcvalue main">19,065,384 <span class="unit">원</span></div><div class="bcdiff" style="color:#1a7a3c">+0원 ▲</div></div>
+          </div></div><div class="bcard">
+          <div class="bcard-hdr">
+            <span class="bgubun" style="background:#d35400">개인</span>
+            <span class="bname">국민은행</span>
+            <span class="bacct">926701-00-025685</span>
+          </div>
+          <div class="bcard-body">
+            <div><div class="bclabel">전일이월잔액</div><div class="bcvalue">35,893,274 <span class="unit">원</span></div></div>
+            <div class="flow-cell"><div class="bclabel">당일 발생액</div><div class="bcvalue-flow"><span class="in-amt">+0</span><span class="out-amt">−400,000</span></div></div>
+            <div><div class="bclabel">당일 잔액</div><div class="bcvalue main">35,493,274 <span class="unit">원</span></div><div class="bcdiff" style="color:#c0392b">-400,000원 ▼</div></div>
+          </div></div></div><div class="tab-nav">
+      <button class="tab-btn corp active" data-target="tab-corp"><span class="em">🏢</span>법인 — 주식회사 하나사인몰<span class="sub">매출 · 국민·기업 · 국민/롯데카드</span></button>
+      <button class="tab-btn personal" data-target="tab-personal"><span class="em">👤</span>개인사업자 — 하나몰 (김한열)<span class="sub">매출 · 국민개인 · 신한카드</span></button>
+    </div><div id="tab-corp" class="tab-content active"><section class='block'><h2 class='block-title'>💼 법인 매출 <span class='block-sub'>0원</span></h2><div class='ssec-empty'>본사매출 (CS) — 해당 없음</div><div class='ssec-empty'>영업매출 — 해당 없음</div><div class='ssec-empty'>오픈마켓매출 (법인) — 해당 없음</div></section><section class='block'><h2 class='block-title'>🏦 법인 입출금 — <strong>국민은행 법인 (655201-01-650555)</strong></h2>
+    <div class='bank-meta'><span>(주식회사 하나사인몰)</span><span>총입금 <strong class='in-amt'>+94,500</strong> · 총출금 <strong class='out-amt'>−0</strong></span></div>
+    <div class='inflow-grid'>
+      <div class='inflow-cell'><div class='inflow-hdr'>📥 본사매출 입금 <small>(CS시트 매핑)</small></div><div class='inflow-amount in-amt'>+0원</div><div class='inflow-cnt'>0건</div><details class='dexp'><summary>거래처별 상세</summary><div class='tbl-wrap'><table class='dtl'><thead><tr><th>일시</th><th>거래처(CS매핑)</th><th>비고</th><th>금액</th></tr></thead><tbody></tbody></table></div></details></div>
+      <div class='inflow-cell'><div class='inflow-hdr'>📥 오픈마켓 입금</div><div class='inflow-amount in-amt'>+0원</div><div class='inflow-cnt'>0건 · 0개 채널</div><div class='tbl-wrap'><table class='om-tbl'><thead><tr><th>채널</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody></tbody></table></div></div>
+      <div class='inflow-cell'><div class='inflow-hdr'>📥 기타 입금</div><div class='inflow-amount in-amt'>+94,500원</div><div class='inflow-cnt'>1건</div><details class='dexp'><summary>상세</summary><div class='tbl-wrap'><table class='dtl'><thead><tr><th>일시</th><th>입금자명</th><th>비고</th><th>금액</th></tr></thead><tbody><tr><td>2026-06-03 16:28:29</td><td>김수철</td><td>김수철 <span class='cat-badge'>외상매출금</span></td><td class='amt in-amt'>+94,500</td></tr></tbody></table></div></details></div>
+    </div>
+    <div class='outflow-section'><h3 class='sub-title'>📤 출금 내역 (카테고리별 자동 분류)</h3><div class='tbl-wrap'><table class='om-tbl'><thead><tr><th>카테고리</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody></tbody></table></div></div>
+    </section><section class='block'><h2 class='block-title'>💳 법인 카드 사용내역 <span class='block-sub'>−120,000원</span></h2><div class='card-grid'><div><div class='card-cell-hdr'>카드사·카드번호별</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>카드사</th><th>카드번호</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody><tr><td>롯데카드</td><td><code>3792-******-**022</code></td><td class='cnt'>2건</td><td class='amt-main out-amt'>−120,000</td><td><details class='dexp'><summary>상세</summary><div class='tbl-wrap'><table class='dtl'><thead><tr><th>일자</th><th>시간</th><th>가맹점</th><th>카테고리</th><th>금액</th></tr></thead><tbody><tr><td>2026-06-03</td><td>22:05</td><td>카카오T대리_카카오페이</td><td><span class='cat-badge'>여비교통비</span></td><td class='amt out-amt'>−20,000</td></tr><tr><td>2026-06-03</td><td>20:42</td><td>스마일페이_G_셀러</td><td><span class='cat-badge'>광고선전비</span></td><td class='amt out-amt'>−100,000</td></tr></tbody></table></div></details></td></tr></tbody></table></div></div><div><div class='card-cell-hdr'>카테고리별 자동 분류</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>카테고리</th><th>건수</th><th>금액</th></tr></thead><tbody><tr><td class='cat-tag'>광고선전비</td><td>1건</td><td class='amt-main out-amt'>−100,000</td></tr><tr><td class='cat-tag'>여비교통비</td><td>1건</td><td class='amt-main out-amt'>−20,000</td></tr></tbody></table></div></div></div></section></div><div id="tab-personal" class="tab-content"><section class='block'><h2 class='block-title personal'>🏠 개인 매출 <span class='block-sub'>0원</span></h2><div class=ssec-empty>매출 없음</div></section><section class='block'><h2 class='block-title personal'>🏦 개인 입출금 — <strong>국민은행 (926701-00-025685)</strong></h2>
+    <div class='bank-meta'><span>(김한열/하나몰)</span><span>총입금 <strong class='in-amt'>+0</strong> · 총출금 <strong class='out-amt'>−400,000</strong></span></div>
+    <div class='outflow-section' style='border-color:#1a7a3c;background:linear-gradient(to right,#eaf7ee,transparent 50%)'>
+      <h3 class='sub-title'>📥 입금 내역 (채널별)</h3>
+      <div class='tbl-wrap'><table class='om-tbl'><thead><tr><th>채널/구분</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody><tr><td colspan=4>입금 없음</td></tr></tbody></table></div>
+    </div>
+    <div class='outflow-section'>
+      <h3 class='sub-title'>📤 출금 내역 (카테고리별)</h3>
+      <div class='tbl-wrap'><table class='om-tbl'><thead><tr><th>카테고리</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody><tr><td class='cat-tag'>광고선전비</td><td>1건</td><td class='amt-main out-amt'>−400,000</td><td><details class='dexp'><summary>상세</summary><div class='tbl-wrap'><table class='dtl'><thead><tr><th>일시</th><th>거래처</th><th>적요</th><th>금액</th></tr></thead><tbody><tr><td>2026-06-03 17:41:07</td><td>네이버페이결제</td><td>FBS 출금</td><td class='amt out-amt'>−400,000</td></tr></tbody></table></div></details></td></tr></tbody></table></div>
+    </div>
+    </section><section class='block'><h2 class='block-title personal'>💳 개인 카드 사용내역 <span class='block-sub'>−26,000원</span></h2><div class='card-grid'><div><div class='card-cell-hdr'>카드사·카드번호별</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>카드사</th><th>카드번호</th><th>건수</th><th>금액</th><th>상세</th></tr></thead><tbody><tr><td>신한카드(개인)</td><td><code>본인634*</code></td><td class='cnt'>3건</td><td class='amt-main out-amt'>−26,000</td><td><details class='dexp'><summary>상세</summary><div class='tbl-wrap'><table class='dtl'><thead><tr><th>일자</th><th>시간</th><th>가맹점</th><th>카테고리</th><th>금액</th></tr></thead><tbody><tr><td>2026-06-03</td><td></td><td>우리만나</td><td><span class='cat-badge'>기타</span></td><td class='amt out-amt'>−7,000</td></tr><tr><td>2026-06-03</td><td></td><td>별미지교삼화 주식회사</td><td><span class='cat-badge'>기타</span></td><td class='amt out-amt'>−16,000</td></tr><tr><td>2026-06-03</td><td></td><td>미니커피</td><td><span class='cat-badge'>기타</span></td><td class='amt out-amt'>−3,000</td></tr></tbody></table></div></details></td></tr></tbody></table></div></div><div><div class='card-cell-hdr'>카테고리별 자동 분류</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>카테고리</th><th>건수</th><th>금액</th></tr></thead><tbody><tr><td class='cat-tag'>기타</td><td>3건</td><td class='amt-main out-amt'>−26,000</td></tr></tbody></table></div></div></div></section></div><section class='block analysis'><h2 class='block-title'>📊 추가 분석 (1~4월 흐름)</h2><div class='analysis-grid'><div class='analysis-cell'><div class='ac-hdr'>💰 잔액 흐름 (월말)</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>월</th><th>법인 KB</th><th>법인 IBK</th><th>개인 KB</th></tr></thead><tbody><tr><td class='m-name'>1월</td><td class='amt-main'>232,745,193</td><td class='amt-main'>1,547,053</td><td class='amt-main'>16,828,739</td></tr><tr><td class='m-name'>2월</td><td class='amt-main'>183,549,161</td><td class='amt-main'>1,872,743</td><td class='amt-main'>6,003,175</td></tr><tr><td class='m-name'>3월</td><td class='amt-main'>210,332,456</td><td class='amt-main'>17,773,421</td><td class='amt-main'>11,370,325</td></tr><tr><td class='m-name'>4월</td><td class='amt-main'>163,470,460</td><td class='amt-main'>20,200,405</td><td class='amt-main'>21,615,684</td></tr></tbody></table></div></div><div class='analysis-cell'><div class='ac-hdr'>⚠️ 이상치 거래 TOP10 (4월 매출 +2σ)</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>일자</th><th>거래처</th><th>품명</th><th>금액</th></tr></thead><tbody><tr><td>2026-04-13</td><td>지비인터렉티브</td><td>A형입간판</td><td class='amt-main' style='color:#c0392b'>11,546,000</td></tr><tr><td>2026-04-02</td><td>음성푸르지오센터피크</td><td>게시판:슬림</td><td class='amt-main' style='color:#c0392b'>7,244,800</td></tr><tr><td>2026-04-17</td><td>옥수삼성아파트</td><td>게시판:슬림</td><td class='amt-main' style='color:#c0392b'>5,450,000</td></tr><tr><td>2026-04-10</td><td>힐스테이트구리역</td><td>게시판:슬림업</td><td class='amt-main' style='color:#c0392b'>3,929,000</td></tr><tr><td>2026-04-16</td><td>서구청</td><td>스티커:빗물받이</td><td class='amt-main' style='color:#c0392b'>3,905,000</td></tr><tr><td>2026-04-02</td><td>동대구해모로</td><td>게시판:슬림</td><td class='amt-main' style='color:#c0392b'>3,531,000</td></tr><tr><td>2026-04-23</td><td>아쿠아플라넷일산(김혜인담당)</td><td>포맥스:기프트샵EXIT</td><td class='amt-main' style='color:#c0392b'>3,157,000</td></tr><tr><td>2026-04-16</td><td>힐스테이트관악센트씨엘아파트입주자대표회의</td><td>포맥스:지하주차장안내도</td><td class='amt-main' style='color:#c0392b'>3,146,000</td></tr><tr><td>2026-04-09</td><td>광주과학기술원</td><td>주차스티커:요일제차량</td><td class='amt-main' style='color:#c0392b'>2,658,000</td></tr><tr><td>2026-04-21</td><td>래미안라그란데입주자대표회의</td><td>스티커:오토바이지상출입금지</td><td class='amt-main' style='color:#c0392b'>2,541,000</td></tr></tbody></table></div></div><div class='analysis-cell'><div class='ac-hdr'>⚠️ 이상치 거래처 TOP10 (합계 + 금액)</div><div class='tbl-wrap'><table class='ssec-tbl'><thead><tr><th>순위</th><th>거래처</th><th>건수</th><th>합계 금액</th></tr></thead><tbody><tr><td class='rank'>1</td><td>지비인터렉티브</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>11,546,000</td></tr><tr><td class='rank'>2</td><td>음성푸르지오센터피크</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>7,244,800</td></tr><tr><td class='rank'>3</td><td>옥수삼성아파트</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>5,450,000</td></tr><tr><td class='rank'>4</td><td>힐스테이트구리역</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>3,929,000</td></tr><tr><td class='rank'>5</td><td>서구청</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>3,905,000</td></tr><tr><td class='rank'>6</td><td>동대구해모로</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>3,531,000</td></tr><tr><td class='rank'>7</td><td>아쿠아플라넷일산(김혜인담당)</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>3,157,000</td></tr><tr><td class='rank'>8</td><td>힐스테이트관악센트씨엘아파트입주자대표회의</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>3,146,000</td></tr><tr><td class='rank'>9</td><td>광주과학기술원</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>2,658,000</td></tr><tr><td class='rank'>10</td><td>래미안라그란데입주자대표회의</td><td class='cnt'>1건</td><td class='amt-main' style='color:#c0392b'>2,541,000</td></tr></tbody></table></div></div><div class='analysis-cell analysis-cell-wide'><div class='ac-hdr'>🛒 오픈마켓별 매출 (6월 누적)</div><div class='tbl-wrap'><table class='ssec-tbl om-matrix'><thead><tr><th>채널</th><th>소방관</th><th>게시판</th><th>주차스티커</th><th>소방관리</th><th>피난도</th><th>현수막</th><th>A형</th><th>오뚜기</th><th>포맥스</th><th>스티커</th><th>기타</th><th class='tot'>합계</th></tr></thead><tbody><tr><td class='ch-name'>하나몰</td><td class='amt'>95,600</td><td class='amt'>1,168,400</td><td class='amt'>-</td><td class='amt'>7,900</td><td class='amt'>112,000</td><td class='amt'>-</td><td class='amt'>748,900</td><td class='amt'>216,600</td><td class='amt'>399,700</td><td class='amt'>2,030,200</td><td class='amt'>601,600</td><td class='amt tot'>5,380,900</td></tr><tr><td class='ch-name'>고도몰</td><td class='amt'>-</td><td class='amt'>1,110,900</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>96,000</td><td class='amt'>207,500</td><td class='amt'>471,800</td><td class='amt'>180,500</td><td class='amt'>52,000</td><td class='amt'>297,500</td><td class='amt'>1,300,500</td><td class='amt tot'>3,716,700</td></tr><tr><td class='ch-name'>지마켓</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>36,356</td><td class='amt'>284,000</td><td class='amt'>73,500</td><td class='amt'>264,100</td><td class='amt'>548,900</td><td class='amt'>39,300</td><td class='amt tot'>1,246,156</td></tr><tr><td class='ch-name'>쿠팡</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>502,300</td><td class='amt'>-</td><td class='amt'>259,000</td><td class='amt'>379,000</td><td class='amt'>103,900</td><td class='amt tot'>1,244,200</td></tr><tr><td class='ch-name'>로켓출력공장</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>525,300</td><td class='amt'>63,200</td><td class='amt'>195,200</td><td class='amt tot'>783,700</td></tr><tr><td class='ch-name'>신규몰</td><td class='amt'>-</td><td class='amt'>118,000</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>67,000</td><td class='amt'>88,400</td><td class='amt'>31,900</td><td class='amt'>38,500</td><td class='amt'>-</td><td class='amt'>47,600</td><td class='amt'>204,000</td><td class='amt tot'>595,400</td></tr><tr><td class='ch-name'>네이버페이</td><td class='amt'>-</td><td class='amt'>100,300</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>70,000</td><td class='amt'>30,000</td><td class='amt'>200,000</td><td class='amt tot'>400,300</td></tr><tr><td class='ch-name'>옥션</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>298,000</td><td class='amt tot'>298,000</td></tr><tr><td class='ch-name'>더바른사인</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>230,000</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt tot'>230,000</td></tr><tr><td class='ch-name'>11번가</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>39,400</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>136,000</td><td class='amt'>-</td><td class='amt tot'>175,400</td></tr><tr><td class='ch-name'>신규몰11984</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>155,600</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt tot'>155,600</td></tr><tr><td class='ch-name'>스마트스토어</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>-</td><td class='amt'>42,000</td><td class='amt tot'>42,000</td></tr><tr class='om-total'><td class='ch-name'>합계</td><td class='amt tot'>95,600</td><td class='amt tot'>2,497,600</td><td class='amt tot'>-</td><td class='amt tot'>7,900</td><td class='amt tot'>275,000</td><td class='amt tot'>371,656</td><td class='amt tot'>2,424,500</td><td class='amt tot'>509,100</td><td class='amt tot'>1,570,100</td><td class='amt tot'>3,532,400</td><td class='amt tot'>2,984,500</td><td class='amt tot'>14,268,356</td></tr></tbody></table></div></div></div></section><section class='block analysis'><h2 class='block-title'>📈 월별 품목 비교 매출 분석 (4월~6월)</h2><style>
+.mtx-wrap{margin-top:18px}
+.mtx-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.mc-card{background:#fff;border:1px solid #c8d8e8;border-radius:8px;padding:12px 14px;text-align:center}
+.mc-card .mc-m{font-size:.78rem;color:#6b7f8f;margin-bottom:4px}
+.mc-card .mc-amt{font-size:1.15rem;font-weight:700;color:#1a3a5c;margin-bottom:3px}
+.mc-card .mc-cnt{font-size:.74rem;color:#6b7f8f}
+.mc-card .mc-change{font-size:.74rem;font-weight:600;margin-top:4px}
+.mtx-tbl{width:100%;border-collapse:collapse;font-size:.85rem;background:#fff;border-radius:8px;overflow:hidden}
+.mtx-tbl th,.mtx-tbl td{border:1px solid #eef3f9;padding:6px 8px;text-align:right;vertical-align:middle}
+.mtx-tbl th{background:#eef3f9;color:#1a3a5c;font-weight:600;text-align:center;font-size:.78rem}
+.mtx-tbl th.cat-col{text-align:left;background:#dceaf7;width:160px}
+.mtx-tbl th.m-grp{background:#1a3a5c;color:#fff;border-color:#1a3a5c}
+.mtx-tbl th.m-grp.total-col{background:#1a7a3c;border-color:#1a7a3c}
+.mtx-tbl th.cnt-th,.mtx-tbl th.amt-th{background:#eef3f9;font-size:.72rem;padding:4px 6px}
+.mtx-tbl th.total-col{background:#eaf7ee;color:#1a7a3c}
+.mtx-tbl td.cat-name{text-align:left;font-weight:600;color:#1a3a5c;background:#f7faff}
+.mtx-tbl tr.cat-etc td.cat-name{color:#6b7f8f;background:#f9fafb}
+.mtx-tbl td.cnt{font-size:.78rem;color:#6b7f8f;width:40px}
+.mtx-tbl td.amt-cell{font-variant-numeric:tabular-nums;font-weight:600;color:#1c2b3a}
+.mtx-tbl td.total-col{background:#eaf7ee;color:#1a7a3c;font-weight:700}
+.mtx-tbl tr.total-row td{background:#dceaf7;font-weight:700;color:#1a3a5c}
+.mtx-tbl tr.total-row td.total-col{background:#9bd3a8;color:#0d4419}
+.mtx-tbl th.diff-grp{background:#b07000;color:#fff;border-color:#b07000;font-size:.74rem;vertical-align:middle}
+.mtx-tbl td.diff-cell{text-align:center;font-variant-numeric:tabular-nums;font-weight:600;background:#fff8ec}
+.mtx-tbl td.diff-cell .diff-amt{font-size:.82rem}
+.mtx-tbl td.diff-cell .diff-pct{font-size:.7rem;opacity:.85;margin-top:2px}
+.mtx-tbl tr.total-row td.diff-cell{background:#fce7c1}
+</style><div class='mtx-wrap'><div class='mtx-cards'><div class="mc-card"><div class="mc-m">4월</div><div class="mc-amt">393,063,054원</div><div class="mc-cnt">2137건</div></div><div class="mc-card"><div class="mc-m">5월</div><div class="mc-amt">241,348,022원</div><div class="mc-cnt">1491건</div><div class="mc-change" style="color:#c0392b">전월대비 -38.6%</div></div><div class="mc-card"><div class="mc-m">6월</div><div class="mc-amt">44,701,566원</div><div class="mc-cnt">289건</div><div class="mc-change" style="color:#c0392b">전월대비 -81.5%</div></div></div><div class='tbl-wrap'><table class='mtx-tbl'><thead><tr><th rowspan='2' class='cat-col'>품목 카테고리</th><th colspan='2' class='m-grp'>4월</th><th colspan='2' class='m-grp'>5월</th><th rowspan='2' class='diff-grp'>5월 vs 4월<br><span style='font-weight:400;font-size:.68rem'>전월대비</span></th><th colspan='2' class='m-grp'>6월</th><th rowspan='2' class='diff-grp'>6월 vs 5월<br><span style='font-weight:400;font-size:.68rem'>전월대비</span></th><th colspan='2' class='m-grp total-col'>합계</th></tr><tr><th class='cnt-th'>건수</th><th class='amt-th'>금액</th><th class='cnt-th'>건수</th><th class='amt-th'>금액</th><th class='cnt-th'>건수</th><th class='amt-th'>금액</th><th class='cnt-th total-col'>건수</th><th class='amt-th total-col'>금액</th></tr></thead><tbody><tr class='cat-main'><td class='cat-name'>소방관진입창+타격지점</td><td class='cnt'>47</td><td class='amt-cell'>2,827,800</td><td class='cnt'>41</td><td class='amt-cell'>1,862,800</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−965,000</div><div class='diff-pct'>−34.1%</div></td><td class='cnt'>3</td><td class='amt-cell'>95,600</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−1,767,200</div><div class='diff-pct'>−94.9%</div></td><td class='cnt total-col'>91</td><td class='amt-cell total-col'>4,786,200</td></tr><tr class='cat-main'><td class='cat-name'>게시판</td><td class='cnt'>189</td><td class='amt-cell'>92,563,500</td><td class='cnt'>142</td><td class='amt-cell'>38,210,840</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−54,352,660</div><div class='diff-pct'>−58.7%</div></td><td class='cnt'>23</td><td class='amt-cell'>9,360,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−28,850,740</div><div class='diff-pct'>−75.5%</div></td><td class='cnt total-col'>354</td><td class='amt-cell total-col'>140,134,440</td></tr><tr class='cat-main'><td class='cat-name'>주차스티커</td><td class='cnt'>120</td><td class='amt-cell'>48,525,240</td><td class='cnt'>79</td><td class='amt-cell'>44,748,120</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−3,777,120</div><div class='diff-pct'>−7.8%</div></td><td class='cnt'>12</td><td class='amt-cell'>6,763,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−37,985,020</div><div class='diff-pct'>−84.9%</div></td><td class='cnt total-col'>211</td><td class='amt-cell total-col'>100,036,460</td></tr><tr class='cat-main'><td class='cat-name'>소방안전관리자현황표</td><td class='cnt'>32</td><td class='amt-cell'>1,207,072</td><td class='cnt'>28</td><td class='amt-cell'>930,044</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−277,028</div><div class='diff-pct'>−23.0%</div></td><td class='cnt'>1</td><td class='amt-cell'>7,900</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−922,144</div><div class='diff-pct'>−99.2%</div></td><td class='cnt total-col'>61</td><td class='amt-cell total-col'>2,145,016</td></tr><tr class='cat-main'><td class='cat-name'>피난안내도</td><td class='cnt'>34</td><td class='amt-cell'>6,037,000</td><td class='cnt'>26</td><td class='amt-cell'>4,597,500</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−1,439,500</div><div class='diff-pct'>−23.8%</div></td><td class='cnt'>9</td><td class='amt-cell'>1,393,000</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−3,204,500</div><div class='diff-pct'>−69.7%</div></td><td class='cnt total-col'>69</td><td class='amt-cell total-col'>12,027,500</td></tr><tr class='cat-main'><td class='cat-name'>현수막</td><td class='cnt'>138</td><td class='amt-cell'>16,545,720</td><td class='cnt'>95</td><td class='amt-cell'>9,054,730</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−7,490,990</div><div class='diff-pct'>−45.3%</div></td><td class='cnt'>25</td><td class='amt-cell'>1,955,656</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−7,099,074</div><div class='diff-pct'>−78.4%</div></td><td class='cnt total-col'>258</td><td class='amt-cell total-col'>27,556,106</td></tr><tr class='cat-main'><td class='cat-name'>A형입간판 노랑</td><td class='cnt'>357</td><td class='amt-cell'>25,261,750</td><td class='cnt'>179</td><td class='amt-cell'>14,151,800</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−11,109,950</div><div class='diff-pct'>−44.0%</div></td><td class='cnt'>28</td><td class='amt-cell'>1,911,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−12,240,700</div><div class='diff-pct'>−86.5%</div></td><td class='cnt total-col'>564</td><td class='amt-cell total-col'>41,324,650</td></tr><tr class='cat-main'><td class='cat-name'>A형입간판 블랙</td><td class='cnt'>129</td><td class='amt-cell'>24,046,886</td><td class='cnt'>48</td><td class='amt-cell'>5,064,538</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−18,982,348</div><div class='diff-pct'>−78.9%</div></td><td class='cnt'>7</td><td class='amt-cell'>626,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−4,438,438</div><div class='diff-pct'>−87.6%</div></td><td class='cnt total-col'>184</td><td class='amt-cell total-col'>29,737,524</td></tr><tr class='cat-main'><td class='cat-name'>주차금지표지판 주황</td><td class='cnt'>63</td><td class='amt-cell'>7,675,700</td><td class='cnt'>21</td><td class='amt-cell'>2,817,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−4,858,600</div><div class='diff-pct'>−63.3%</div></td><td class='cnt'>2</td><td class='amt-cell'>103,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−2,714,000</div><div class='diff-pct'>−96.3%</div></td><td class='cnt total-col'>86</td><td class='amt-cell total-col'>10,595,900</td></tr><tr class='cat-main'><td class='cat-name'>주차금지표지판 블랙</td><td class='cnt'>26</td><td class='amt-cell'>5,305,250</td><td class='cnt'>37</td><td class='amt-cell'>5,747,400</td><td class='diff-cell' style='color:#1a7a3c'><div class='diff-amt'>+442,150</div><div class='diff-pct'>+8.3%</div></td><td class='cnt'>6</td><td class='amt-cell'>1,358,000</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−4,389,400</div><div class='diff-pct'>−76.4%</div></td><td class='cnt total-col'>69</td><td class='amt-cell total-col'>12,410,650</td></tr><tr class='cat-main'><td class='cat-name'>포맥스</td><td class='cnt'>319</td><td class='amt-cell'>54,277,050</td><td class='cnt'>251</td><td class='amt-cell'>41,178,100</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−13,098,950</div><div class='diff-pct'>−24.1%</div></td><td class='cnt'>48</td><td class='amt-cell'>5,959,880</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−35,218,220</div><div class='diff-pct'>−85.5%</div></td><td class='cnt total-col'>618</td><td class='amt-cell total-col'>101,415,030</td></tr><tr class='cat-main'><td class='cat-name'>스티커</td><td class='cnt'>348</td><td class='amt-cell'>47,868,246</td><td class='cnt'>281</td><td class='amt-cell'>30,876,270</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−16,991,976</div><div class='diff-pct'>−35.5%</div></td><td class='cnt'>62</td><td class='amt-cell'>4,268,700</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−26,607,570</div><div class='diff-pct'>−86.2%</div></td><td class='cnt total-col'>691</td><td class='amt-cell total-col'>83,013,216</td></tr><tr class='cat-main'><td class='cat-name'>말뚝</td><td class='cnt'>87</td><td class='amt-cell'>14,682,610</td><td class='cnt'>65</td><td class='amt-cell'>13,246,410</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−1,436,200</div><div class='diff-pct'>−9.8%</div></td><td class='cnt'>12</td><td class='amt-cell'>3,189,000</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−10,057,410</div><div class='diff-pct'>−75.9%</div></td><td class='cnt total-col'>164</td><td class='amt-cell total-col'>31,118,020</td></tr><tr class='cat-etc'><td class='cat-name'>기타</td><td class='cnt'>248</td><td class='amt-cell'>46,239,230</td><td class='cnt'>198</td><td class='amt-cell'>28,862,370</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−17,376,860</div><div class='diff-pct'>−37.6%</div></td><td class='cnt'>51</td><td class='amt-cell'>7,710,330</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−21,152,040</div><div class='diff-pct'>−73.3%</div></td><td class='cnt total-col'>497</td><td class='amt-cell total-col'>82,811,930</td></tr><tr class='total-row'><td class='cat-name'>합계</td><td class='cnt'>2137</td><td class='amt-cell'>393,063,054</td><td class='cnt'>1491</td><td class='amt-cell'>241,348,022</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−151,715,032</div><div class='diff-pct'>−38.6%</div></td><td class='cnt'>289</td><td class='amt-cell'>44,701,566</td><td class='diff-cell' style='color:#c0392b'><div class='diff-amt'>−196,646,456</div><div class='diff-pct'>−81.5%</div></td><td class='cnt total-col'>3917</td><td class='amt-cell total-col'>679,112,642</td></tr></tbody></table></div><div style='font-size:.75rem;color:#6b7f8f;margin-top:8px'>※ 업체현황 시트 기준 · 13개 우선 카테고리 + 기타(소재/아이템 묶음). 보고서 마지막 일자가 속한 월까지 자동 누적.</div></div></section><div class="foot">하나사인몰 웹팀 · v7.3 4월+5월 통합 · 모바일 반응형</div></div><script>
+    document.querySelectorAll('.tab-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+    </script></body></html>
