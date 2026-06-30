@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>하나사인몰 법인+개인 합산 손익보고서 | 제8기 2026.01~05</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0f1115;--card:#181b22;--card2:#1f232c;--line:#2a2f3a;--txt:#e7eaf0;--sub:#9aa3b2;--accent:#4f8cff;--green:#34d399;--red:#f87171;--amber:#fbbf24}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;background:var(--bg);color:var(--txt);line-height:1.6}
+.wrap{max-width:1140px;margin:0 auto;padding:32px 18px 80px}
+header.hero{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:28px}
+.badge{display:inline-block;font-size:12px;letter-spacing:1px;color:var(--accent);background:rgba(79,140,255,.12);padding:4px 10px;border-radius:6px;margin-bottom:12px;font-weight:600}
+h1{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.hero .meta{color:var(--sub);font-size:13.5px;margin-top:8px}
+h2{font-size:18px;font-weight:700;margin:38px 0 14px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:4px;height:17px;background:var(--accent);border-radius:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:17px}
+.kpi .label{font-size:12px;color:var(--sub);margin-bottom:6px}
+.kpi .val{font-size:21px;font-weight:800;letter-spacing:-.5px}
+.kpi .unit{font-size:13px;color:var(--sub);font-weight:600}
+.kpi .sub{font-size:12px;color:var(--sub);margin-top:4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:14px;overflow-x:auto}
+.chart-box{position:relative;height:320px}
+table.pl{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+table.pl th,table.pl td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+table.pl th:first-child{text-align:left}
+table.pl thead th{color:var(--sub);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--card)}
+table.pl tr.lv1>th{font-weight:800}
+table.pl tr.lv1>td{font-weight:700}
+table.pl tr.sub th{color:var(--sub);font-weight:500}
+table.pl tr.sub td{color:var(--sub)}
+table.pl td.cum{font-weight:800;color:#cdd6e4;border-left:1px solid var(--line)}
+table.pl tr.hl{background:rgba(52,211,153,.07)}
+table.pl tr.hl2{background:rgba(79,140,255,.10)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}
+.vcard{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--amber);border-radius:10px;padding:15px}
+.vtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.vacct{font-weight:700;font-size:14px}
+.vmonth{background:rgba(251,191,36,.15);color:var(--amber);font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px}
+.vval{font-size:20px;font-weight:800;color:var(--amber)}
+.vval span{font-size:12px;color:var(--sub);font-weight:600;margin-left:2px}
+.vratio{font-size:12px;color:var(--sub);margin:2px 0 8px}
+.vcmt{font-size:12.5px;color:var(--txt);border-top:1px dashed var(--line);padding-top:8px}
+.insight{background:var(--card2);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:13px 17px;margin-top:12px;font-size:13.5px}
+.insight b{color:var(--accent)}
+.note{font-size:12.5px;color:var(--sub);background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:16px;margin-top:14px}
+.note b{color:var(--txt)}
+.warn{font-size:12.8px;color:#fde68a;background:rgba(251,191,36,.08);border:1px solid rgba(251,191,36,.3);border-radius:10px;padding:14px 16px;margin-top:14px}
+footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);color:var(--sub);font-size:12px;text-align:center}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,1fr)}h1{font-size:21px}}
+</style></head><body>
+<div class="wrap">
+<header class="hero">
+<span class="badge">하나사인몰 · 법인+개인 합산 손익</span>
+<h1>월별 합산 손익보고서</h1>
+<div class="meta">제 8 기 · 2026년 1월 ~ 5월 · 법인(더존 손익) + 개인사업자(하나몰) 합산 · 매출은 공급가액(net) 기준 · (단위: 원)</div>
+</header>
+
+<section class="kpis">
+<div class="kpi"><div class="label">누적 매출액(net)</div><div class="val">12.89<span class="unit"> 억</span></div><div class="sub">1,289,349,975원</div></div>
+<div class="kpi"><div class="label">누적 매출총이익</div><div class="val">6.78<span class="unit"> 억</span></div><div class="sub">677,769,078원</div></div>
+<div class="kpi"><div class="label">누적 영업이익</div><div class="val">0.83<span class="unit"> 억</span></div><div class="sub">83,076,807원</div></div>
+<div class="kpi"><div class="label">누적 당기순이익</div><div class="val">0.87<span class="unit"> 억</span></div><div class="sub">87,320,697원</div></div>
+</section>
+
+<div class="warn">⚠ <b>5월 단월 주의</b> — 상품·제품 매출원가(법인+개인 611,580,897원)를 회사 방침에 따라 <b>5월에 일괄(재고결산) 반영</b>했습니다. 그래서 1~4월 매출총이익은 과대, 5월은 적자로 보이는 착시가 있습니다. 누적 기준으로 보셔야 정확합니다.</div>
+
+<h2>월별 매출 · 영업이익 추이</h2>
+<div class="card"><div class="chart-box"><canvas id="c1"></canvas></div></div>
+
+<h2>합산 손익계산서 (월별 + 누적)</h2>
+<div class="card">
+<table class="pl"><thead><tr><th>과목</th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th class="cum">누적</th></tr></thead>
+<tbody><tr class="lv1"><th>Ⅰ. 매출액</th><td>208,117,581</td><td>166,062,309</td><td>308,845,245</td><td>340,185,035</td><td>266,139,805</td><td class="cum">1,289,349,975</td></tr><tr class="sub"><th>&nbsp;&nbsp;법인 매출</th><td>173,321,763</td><td>139,626,264</td><td>275,928,196</td><td>287,454,463</td><td>214,487,554</td><td class="cum">1,090,818,240</td></tr><tr class="sub"><th>&nbsp;&nbsp;개인 매출(net)</th><td>34,795,818</td><td>26,436,045</td><td>32,917,049</td><td>52,730,572</td><td>51,652,251</td><td class="cum">198,531,735</td></tr><tr class="lv1"><th>Ⅱ. 매출원가</th><td>0</td><td>0</td><td>0</td><td>0</td><td>611,580,897</td><td class="cum">611,580,897</td></tr><tr class="lv1 hl"><th>Ⅲ. 매출총이익</th><td>208,117,581</td><td>166,062,309</td><td>308,845,245</td><td>340,185,035</td><td>-345,441,092</td><td class="cum">677,769,078</td></tr><tr class="lv1"><th>Ⅳ. 판매비와관리비</th><td>108,974,159</td><td>98,307,505</td><td>130,215,674</td><td>133,201,464</td><td>123,993,469</td><td class="cum">594,692,271</td></tr><tr class="sub"><th>&nbsp;&nbsp;직원급여</th><td>55,754,920</td><td>55,194,154</td><td>58,070,947</td><td>64,113,828</td><td>61,898,393</td><td class="cum">295,032,242</td></tr><tr class="sub"><th>&nbsp;&nbsp;복리후생비</th><td>3,738,636</td><td>1,441,463</td><td>2,691,086</td><td>3,467,768</td><td>2,699,583</td><td class="cum">14,038,536</td></tr><tr class="sub"><th>&nbsp;&nbsp;여비교통비</th><td>1,541,122</td><td>5,310,152</td><td>1,395,776</td><td>1,502,683</td><td>1,043,754</td><td class="cum">10,793,487</td></tr><tr class="sub"><th>&nbsp;&nbsp;접대비</th><td>812,000</td><td>565,000</td><td>1,560,700</td><td>1,398,700</td><td>918,500</td><td class="cum">5,254,900</td></tr><tr class="sub"><th>&nbsp;&nbsp;통신비</th><td>629,704</td><td>614,173</td><td>772,853</td><td>691,199</td><td>749,372</td><td class="cum">3,457,301</td></tr><tr class="sub"><th>&nbsp;&nbsp;수도광열비</th><td>35,710</td><td>105,660</td><td>128,790</td><td>28,400</td><td>1,100</td><td class="cum">299,660</td></tr><tr class="sub"><th>&nbsp;&nbsp;세금과공과금</th><td>94,500</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="cum">94,500</td></tr><tr class="sub"><th>&nbsp;&nbsp;지급임차료</th><td>11,000</td><td>11,000</td><td>11,000</td><td>11,000</td><td>11,000</td><td class="cum">55,000</td></tr><tr class="sub"><th>&nbsp;&nbsp;수선비</th><td>1,161,818</td><td>0</td><td>0</td><td>300,000</td><td>0</td><td class="cum">1,461,818</td></tr><tr class="sub"><th>&nbsp;&nbsp;보험료</th><td>1,995,920</td><td>1,741,900</td><td>2,054,130</td><td>2,033,120</td><td>5,101,900</td><td class="cum">12,926,970</td></tr><tr class="sub"><th>&nbsp;&nbsp;운반비</th><td>51,000</td><td>10,600</td><td>149,300</td><td>6,700</td><td>12,000</td><td class="cum">229,600</td></tr><tr class="sub"><th>&nbsp;&nbsp;교육훈련비</th><td>0</td><td>0</td><td>2,894,920</td><td>500,000</td><td>0</td><td class="cum">3,394,920</td></tr><tr class="sub"><th>&nbsp;&nbsp;사무용품비</th><td>175,546</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="cum">175,546</td></tr><tr class="sub"><th>&nbsp;&nbsp;소모품비</th><td>4,272,343</td><td>2,424,903</td><td>12,398,151</td><td>3,920,059</td><td>5,985,745</td><td class="cum">29,001,201</td></tr><tr class="sub"><th>&nbsp;&nbsp;차량유지비</th><td>67,273</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="cum">67,273</td></tr><tr class="sub"><th>&nbsp;&nbsp;지급수수료</th><td>10,686,979</td><td>8,148,922</td><td>20,196,088</td><td>25,973,015</td><td>17,203,471</td><td class="cum">82,208,475</td></tr><tr class="sub"><th>&nbsp;&nbsp;광고선전비</th><td>27,945,688</td><td>22,739,578</td><td>27,891,933</td><td>29,254,992</td><td>28,368,651</td><td class="cum">136,200,842</td></tr><tr class="lv1 hl"><th>Ⅴ. 영업이익</th><td>99,143,422</td><td>67,754,804</td><td>178,629,571</td><td>206,983,571</td><td>-469,434,561</td><td class="cum">83,076,807</td></tr><tr class="lv1"><th>Ⅵ. 영업외수익</th><td>230,246</td><td>185</td><td>16,961,515</td><td>3,601,976</td><td>1,584</td><td class="cum">20,795,506</td></tr><tr class="lv1"><th>Ⅶ. 영업외비용</th><td>1,453,110</td><td>1,454,619</td><td>4,330,972</td><td>4,180,784</td><td>4,128,741</td><td class="cum">15,548,226</td></tr><tr class="lv1"><th>Ⅷ. 법인세차감전이익</th><td>97,920,558</td><td>66,300,370</td><td>191,260,114</td><td>206,404,763</td><td>-473,561,718</td><td class="cum">88,324,087</td></tr><tr class="lv1"><th>Ⅸ. 법인세등</th><td>0</td><td>0</td><td>1,003,390</td><td>0</td><td>0</td><td class="cum">1,003,390</td></tr><tr class="lv1 hl2"><th>Ⅹ. 당기순이익</th><td>97,920,558</td><td>66,300,370</td><td>190,256,724</td><td>206,404,763</td><td>-473,561,718</td><td class="cum">87,320,697</td></tr></tbody></table>
+</div>
+<div class="insight">누적 <b>매출 12.89억</b> 중 법인 10.91억(84.6%) · 개인 1.99억(15.4%). 누적 <b>영업이익 83,076,807원</b>, 영업이익률 6.4%. 3월 잡이익 16,961,349원(비경상)이 영업외수익에 포함돼 있습니다.</div>
+
+<h2>⚠ 월별 비용 이상치 (다른 달 대비 튀는 항목)</h2>
+<div class="vgrid"><div class="vcard">
+      <div class="vtop"><span class="vacct">여비교통비</span><span class="vmonth">2월</span></div>
+      <div class="vval">5,310,152<span>원</span></div>
+      <div class="vratio">평균 2.16M의 2.5배</div>
+      <div class="vcmt">2월 한 달에 집중 — 출장·교통비 전표 확인 권장</div></div><div class="vcard">
+      <div class="vtop"><span class="vacct">소모품비</span><span class="vmonth">3월</span></div>
+      <div class="vval">12,398,151<span>원</span></div>
+      <div class="vratio">평균 5.80M의 2.1배</div>
+      <div class="vcmt">3월 성수기 진입과 함께 부자재·소모품 대량 집행 추정</div></div><div class="vcard">
+      <div class="vtop"><span class="vacct">교육훈련비</span><span class="vmonth">3월</span></div>
+      <div class="vval">2,894,920<span>원</span></div>
+      <div class="vratio">평균 0.68M의 4.3배</div>
+      <div class="vcmt">3월에만 집중 발생 — 연초 교육비 일괄 집행</div></div><div class="vcard">
+      <div class="vtop"><span class="vacct">보험료</span><span class="vmonth">5월</span></div>
+      <div class="vval">5,101,900<span>원</span></div>
+      <div class="vratio">평균 2.59M의 2.0배</div>
+      <div class="vcmt">5월 급증 — 연납·갱신 보험료 추정</div></div><div class="vcard">
+      <div class="vtop"><span class="vacct">지급수수료</span><span class="vmonth">3·4월</span></div>
+      <div class="vval">20.2M·26.0M<span>원</span></div>
+      <div class="vratio">1~2월(8~10M) 대비 2~3배</div>
+      <div class="vcmt">매출 성수기 연동(오픈마켓·카드·네이버 수수료) — 매출 대비 비율은 정상범위인지 점검</div></div></div>
+<div class="insight">위 항목은 <b>특정 월에 평균의 2~4배</b>로 집중 발생한 비용입니다. 회계 오류라기보다 일시성 집행(연초 교육·연납 보험·대량 구매 등)일 가능성이 높지만, 전표 단위로 한 번 확인하시길 권장합니다. 지급수수료의 3·4월 증가는 매출 성수기와 연동된 정상 패턴으로 보입니다.</div>
+
+<div class="note">
+<b>작성 기준 · 가정 (검증 필요)</b><br>
+· <b>매출(net)</b>: 법인은 더존 손익(공급가액) 그대로, 개인(하나몰 세금계산서+오픈마켓)은 공급대가로 보고 ÷1.1 하여 공급가액으로 환산 후 합산.<br>
+· <b>신한카드 VAT</b>: 접대비는 전액(불공제), 그 외 일반판관비는 ÷1.1(공급가액, 부가세공제 전제).<br>
+· <b>매입세금계산서</b>: 공급가액 그대로 사용(광고선전비·지급수수료=판관비, 상품=매출원가).<br>
+· <b>재고/매출원가</b>: 법인 방식대로 1~4월은 원가 미반영, 개인 상품매입(27,194,144원)도 5월에 일괄 매출원가 반영.<br>
+· <b>비용 출처</b>: 개인 비용 = 매입세금계산서 + 경리일보 각 일자탭 '신한카드' 블록(사용금액·계정과목). 국민/롯데 등 타 카드는 제외(지시사항).<br>
+· 데이터: 기간별손익.xls, 1~5월 하나몰 세금계산서.xls, 26년 1~5월 경리일보 5개.
+</div>
+
+<footer>하나사인몰 웹팀 · 법인+개인 합산 손익 · 제8기 2026.01~05 · 내부 검토용<br>매출 공급가액(net) 기준 · 5월 재고결산 일괄반영</footer>
+</div>
+<script>
+const D={"M": ["1월", "2월", "3월", "4월", "5월"], "sales": [208117581.0, 166062309.0, 308845245.0, 340185035.0, 266139805.0], "op": [99143422.0, 67754804.0, 178629571.0, 206983571.0, -469434561.0], "corp": [173321763.0, 139626264.0, 275928196.0, 287454463.0, 214487554.0], "gae": [34795818, 26436045, 32917049, 52730572, 51652251], "panacct": {"지급수수료": [10686979.0, 8148922.0, 20196088.0, 25973015.0, 17203471.0], "광고선전비": [27945688.0, 22739578.0, 27891933.0, 29254992.0, 28368651.0], "소모품비": [4272343.0, 2424903.0, 12398151.0, 3920059.0, 5985745.0], "직원급여": [55754920.0, 55194154.0, 58070947.0, 64113828.0, 61898393.0]}};
+const KRW=v=>v.toLocaleString('ko-KR');
+Chart.defaults.color='#9aa3b2';Chart.defaults.font.family='Pretendard,sans-serif';
+new Chart(document.getElementById('c1'),{data:{labels:D.M,datasets:[
+ {type:'bar',label:'법인매출',data:D.corp,backgroundColor:'#4f8cff',stack:'s'},
+ {type:'bar',label:'개인매출(net)',data:D.gae,backgroundColor:'#34d399',stack:'s'},
+ {type:'line',label:'영업이익',data:D.op,borderColor:'#fbbf24',backgroundColor:'#fbbf24',borderWidth:3,tension:.3,pointRadius:4,yAxisID:'y'}
+]},options:{responsive:true,maintainAspectRatio:false,
+ plugins:{legend:{position:'top',labels:{boxWidth:12,padding:14}},tooltip:{callbacks:{label:c=>c.dataset.label+' '+KRW(c.parsed.y)+'원'}}},
+ scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:'#2a2f3a'},ticks:{callback:v=>(v/1e8).toFixed(1)+'억'}}}}});
+</script>
+<!-- PASSWORD GATE -->
+<div id="hsmGate" style="position:fixed;inset:0;z-index:99999;background:#0f1115;display:flex;align-items:center;justify-content:center;font-family:Pretendard,'Apple SD Gothic Neo','Malgun Gothic',sans-serif">
+  <div style="width:min(360px,90vw);background:#181b22;border:1px solid #2a2f3a;border-radius:16px;padding:34px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="font-size:34px;margin-bottom:6px">🔒</div>
+    <div style="color:#e7eaf0;font-size:18px;font-weight:800;margin-bottom:4px">하나사인몰 보고서</div>
+    <div style="color:#9aa3b2;font-size:13px;margin-bottom:20px">열람하려면 비밀번호를 입력하세요</div>
+    <input id="hsmPw" type="password" inputmode="numeric" placeholder="비밀번호" style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid #2a2f3a;background:#0f1115;color:#e7eaf0;font-size:16px;text-align:center;outline:none;letter-spacing:3px">
+    <div id="hsmErr" style="color:#f87171;font-size:12.5px;height:16px;margin:8px 0 4px"></div>
+    <button id="hsmBtn" style="width:100%;padding:12px;border:none;border-radius:10px;background:#4f8cff;color:#fff;font-size:15px;font-weight:700;cursor:pointer">확인</button>
+  </div></div>
+<script>(function(){var PW="110277",KEY="hsm_auth";var g=document.getElementById('hsmGate'),p=document.getElementById('hsmPw'),b=document.getElementById('hsmBtn'),e=document.getElementById('hsmErr');function u(){g.parentNode.removeChild(g);document.body.style.overflow='';}if(sessionStorage.getItem(KEY)==='1'){u();return;}document.body.style.overflow='hidden';function t(){if(p.value===PW){sessionStorage.setItem(KEY,'1');u();}else{e.textContent='비밀번호가 일치하지 않습니다';p.value='';p.focus();}}b.addEventListener('click',t);p.addEventListener('keydown',function(ev){if(ev.key==='Enter')t();});setTimeout(function(){p.focus();},100);})();</script>
+<!-- /PASSWORD GATE -->
+</body></html>
