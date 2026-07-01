@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>하나사인몰 연차 현황 보고서</title>
+<title>연차 현황 보고서 · 하나사인몰</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: 'Malgun Gothic', -apple-system, sans-serif; background: #f5f6fa; color: #2d3748; line-height: 1.5; padding: 20px; }
@@ -15,30 +15,18 @@ header .meta { opacity: 0.85; font-size: 13px; }
 .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 .card .label { font-size: 12px; color: #718096; margin-bottom: 6px; font-weight: 500; }
 .card .value { font-size: 28px; font-weight: 700; color: #1F4E78; }
-.card .value.warn { color: #C00000; }
-.card .value.ok { color: #2f855a; }
 .card .sub { font-size: 11px; color: #a0aec0; margin-top: 4px; }
 section { background: white; padding: 24px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
 section h2 { font-size: 17px; margin-bottom: 16px; color: #1F4E78; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0; }
-h2 .badge { background: #C00000; color: white; font-size: 12px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 600; }
-h2 .badge.ok { background: #2f855a; }
+h2 .badge { background: #2f855a; color: white; font-size: 12px; padding: 3px 10px; border-radius: 12px; margin-left: 8px; font-weight: 600; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 thead { background: #f7fafc; }
 th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #edf2f7; }
 th { font-weight: 600; color: #4a5568; font-size: 12px; }
 tr:hover { background: #f9fafb; }
-.status { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
-.s-기한경과 { background: #C00000; color: white; }
-.s-1개월 { background: #f56565; color: white; }
-.s-3개월 { background: #f6ad55; color: white; }
-.s-정상 { background: #e2e8f0; color: #4a5568; }
-.s-사용완료 { background: #48bb78; color: white; }
 .rem-pos { color: #2f855a; font-weight: 600; }
 .rem-neg { color: #C00000; font-weight: 600; }
 .rem-zero { color: #a0aec0; }
-.notice { background: #fff5f5; border-left: 4px solid #C00000; padding: 14px 18px; border-radius: 6px; margin-bottom: 16px; }
-.notice strong { color: #C00000; }
-footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 30px; padding: 20px; }
 @media (max-width: 720px) { .grid { grid-template-columns: repeat(2, 1fr); } th:nth-child(3), td:nth-child(3) { display: none; } }
 @media print { body { background: white; padding: 0; } .card, section { box-shadow: none; border: 1px solid #ddd; } }
 </style>
@@ -47,82 +35,36 @@ footer { text-align: center; color: #a0aec0; font-size: 12px; margin-top: 30px; 
 <div class="wrap">
 <header>
   <h1>하나사인몰 연차 현황 보고서</h1>
-  <div class="meta">기준일: <strong id="today"></strong> / 대표 보고용 요약본</div>
+  <div class="meta">기준일: <strong id="today"></strong></div>
 </header>
 
 <div class="grid">
   <div class="card"><div class="label">재직자</div><div class="value" id="v-emp"></div><div class="sub">퇴사자 제외</div></div>
   <div class="card"><div class="label">총 발생</div><div class="value" id="v-issued"></div><div class="sub">발생완료 누적</div></div>
   <div class="card"><div class="label">총 사용</div><div class="value" id="v-used"></div><div class="sub">누적 사용</div></div>
-  <div class="card"><div class="label">총 잔여</div><div class="value ok" id="v-rem"></div><div class="sub">현재 잔여</div></div>
+  <div class="card"><div class="label">총 잔여</div><div class="value" id="v-rem"></div><div class="sub">현재 잔여</div></div>
 </div>
 
 <section>
-  <h2>연차 소멸 예정 <span class="badge" id="urgent-count"></span></h2>
-  <div class="notice" id="notice-box"></div>
-  <table id="urgent-table">
-    <thead><tr><th>이름</th><th>부서/직급</th><th>사이클</th><th>사용기한</th><th>D-day</th><th>잔여</th><th>상태</th></tr></thead>
-    <tbody></tbody>
-  </table>
-</section>
-
-<section>
-  <h2>전체 직원 현황 <span class="badge ok" id="total-count"></span></h2>
+  <h2>전체 직원 현황 <span class="badge" id="total-count"></span></h2>
   <table id="all-table">
-    <thead><tr><th>이름</th><th>부서/직급</th><th>입사일</th><th>근속</th><th>사이클</th><th>발생</th><th>사용</th><th>잔여</th><th>다음발생</th><th>상태</th></tr></thead>
+    <thead><tr><th>이름</th><th>부서/직급</th><th>입사일</th><th>근속</th><th>사이클</th><th>발생</th><th>사용</th><th>잔여</th><th>최근발생일</th></tr></thead>
     <tbody></tbody>
   </table>
 </section>
-
-<footer>
-  하나사인몰 웹팀 · 대표 보고용 · 자동 생성 보고서<br>
-  세부 데이터: 연차관리_개선판_v10.xlsx (대시보드/통보대상 시트 참조)
-</footer>
 </div>
 
 <script>
-const DATA = {"today": "2026-07-01", "total_emp": 27, "total_issued": 1178.0, "total_used": 981.0, "total_rem": 197.0, "status_count": {"정상": 12, "사용완료": 5, "1개월": 2, "3개월": 8}, "employees": [{"name": "김동관", "dept": "", "rank": "", "join": "2020-06-16", "tenure_y": 6.0, "cycle_year": 7, "cycle_days": 17, "expire": "2027-06-15", "d_day": 349, "issued": 98.5, "used": 81.0, "remaining": 17.5, "next_date": "2027-06-16", "status": "정상"}, {"name": "이영호", "dept": "", "rank": "", "join": "2021-05-10", "tenure_y": 5.1, "cycle_year": 6, "cycle_days": 17, "expire": "2027-05-09", "d_day": 312, "issued": 88, "used": 67.0, "remaining": 21.0, "next_date": "2027-05-10", "status": "정상"}, {"name": "천현정", "dept": "", "rank": "", "join": "2018-12-17", "tenure_y": 7.5, "cycle_year": 8, "cycle_days": 18, "expire": "2026-12-16", "d_day": 168, "issued": 108, "used": 109.0, "remaining": -1.0, "next_date": "2026-12-17", "status": "사용완료"}, {"name": "송기용", "dept": "", "rank": "", "join": "2019-12-16", "tenure_y": 6.5, "cycle_year": 7, "cycle_days": 17, "expire": "2026-12-15", "d_day": 167, "issued": 97, "used": 87.0, "remaining": 10.0, "next_date": "2026-12-16", "status": "정상"}, {"name": "문미라", "dept": "", "rank": "", "join": "2021-05-06", "tenure_y": 5.2, "cycle_year": 6, "cycle_days": 17, "expire": "2027-05-05", "d_day": 308, "issued": 87.5, "used": 70.5, "remaining": 17.0, "next_date": "2027-05-06", "status": "정상"}, {"name": "이지은", "dept": "", "rank": "", "join": "2021-11-29", "tenure_y": 4.6, "cycle_year": 5, "cycle_days": 16, "expire": "2026-11-28", "d_day": 150, "issued": 73, "used": 63.0, "remaining": 10.0, "next_date": "2026-11-29", "status": "정상"}, {"name": "정예진", "dept": "", "rank": "", "join": "2022-01-02", "tenure_y": 4.5, "cycle_year": 5, "cycle_days": 16, "expire": "2027-01-01", "d_day": 184, "issued": 73, "used": 62.5, "remaining": 10.5, "next_date": "2027-01-02", "status": "정상"}, {"name": "정현주", "dept": "", "rank": "", "join": "2022-01-03", "tenure_y": 4.5, "cycle_year": 5, "cycle_days": 16, "expire": "2027-01-02", "d_day": 185, "issued": 73, "used": 71.0, "remaining": 2.0, "next_date": "2027-01-03", "status": "정상"}, {"name": "강두원", "dept": "", "rank": "", "join": "2022-07-26", "tenure_y": 3.9, "cycle_year": 4, "cycle_days": 16, "expire": "2026-07-25", "d_day": 24, "issued": 57, "used": 44.0, "remaining": 13.0, "next_date": "2026-07-26", "status": "1개월"}, {"name": "김정란", "dept": "", "rank": "", "join": "2023-08-07", "tenure_y": 2.9, "cycle_year": 3, "cycle_days": 15, "expire": "2026-08-06", "d_day": 36, "issued": 41, "used": 41.0, "remaining": 0.0, "next_date": "2026-08-07", "status": "사용완료"}, {"name": "최두학", "dept": "", "rank": "", "join": "2023-09-04", "tenure_y": 2.8, "cycle_year": 3, "cycle_days": 15, "expire": "2026-09-03", "d_day": 64, "issued": 41, "used": 27.5, "remaining": 13.5, "next_date": "2026-09-04", "status": "3개월"}, {"name": "이경민", "dept": "", "rank": "", "join": "2024-02-26", "tenure_y": 2.3, "cycle_year": 3, "cycle_days": 15, "expire": "2027-02-25", "d_day": 239, "issued": 41, "used": 22.5, "remaining": 18.5, "next_date": "2027-02-26", "status": "정상"}, {"name": "신혜리", "dept": "", "rank": "", "join": "2024-03-07", "tenure_y": 2.3, "cycle_year": 3, "cycle_days": 15, "expire": "2027-03-06", "d_day": 248, "issued": 41, "used": 26.0, "remaining": 15.0, "next_date": "2027-03-07", "status": "정상"}, {"name": "박상준", "dept": "웹팀", "rank": "차장", "join": "2024-07-02", "tenure_y": 2.0, "cycle_year": 2, "cycle_days": 15, "expire": "2026-07-01", "d_day": 0, "issued": 26, "used": 29.0, "remaining": -3.0, "next_date": "2026-07-02", "status": "사용완료"}, {"name": "우연형", "dept": "", "rank": "", "join": "2024-07-29", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-07-28", "d_day": 27, "issued": 26, "used": 22.0, "remaining": 4.0, "next_date": "2026-07-29", "status": "1개월"}, {"name": "김사랑", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-08-04", "d_day": 34, "issued": 26, "used": 22.5, "remaining": 3.5, "next_date": "2026-08-05", "status": "3개월"}, {"name": "임화영", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-08-04", "d_day": 34, "issued": 26, "used": 23.5, "remaining": 2.5, "next_date": "2026-08-05", "status": "3개월"}, {"name": "김민현", "dept": "", "rank": "", "join": "2024-09-09", "tenure_y": 1.8, "cycle_year": 2, "cycle_days": 15, "expire": "2026-09-08", "d_day": 69, "issued": 26, "used": 25.0, "remaining": 1.0, "next_date": "2026-09-09", "status": "3개월"}, {"name": "이태경", "dept": "", "rank": "", "join": "2024-09-23", "tenure_y": 1.8, "cycle_year": 2, "cycle_days": 15, "expire": "2026-09-22", "d_day": 83, "issued": 26, "used": 17.0, "remaining": 9.0, "next_date": "2026-09-23", "status": "3개월"}, {"name": "이하나", "dept": "", "rank": "", "join": "2024-11-13", "tenure_y": 1.6, "cycle_year": 2, "cycle_days": 15, "expire": "2026-11-12", "d_day": 134, "issued": 26, "used": 18.5, "remaining": 7.5, "next_date": "2026-11-13", "status": "정상"}, {"name": "나민지", "dept": "", "rank": "", "join": "2025-08-12", "tenure_y": 0.9, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-11", "d_day": 41, "issued": 11, "used": 10.5, "remaining": 0.5, "next_date": "2026-08-12", "status": "3개월"}, {"name": "홍재이", "dept": "웹팀", "rank": "주임", "join": "2025-08-13", "tenure_y": 0.9, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-12", "d_day": 42, "issued": 11, "used": 11.0, "remaining": 0.0, "next_date": "2026-08-13", "status": "사용완료"}, {"name": "김은혜", "dept": "웹디자인팀", "rank": "주임", "join": "2025-08-18", "tenure_y": 0.9, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-17", "d_day": 47, "issued": 11, "used": 10.0, "remaining": 1.0, "next_date": "2026-08-18", "status": "3개월"}, {"name": "김현우", "dept": "", "rank": "", "join": "2025-09-01", "tenure_y": 0.8, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-31", "d_day": 61, "issued": 11, "used": 0.5, "remaining": 10.5, "next_date": "2026-09-01", "status": "3개월"}, {"name": "김민주", "dept": "", "rank": "", "join": "2025-09-09", "tenure_y": 0.8, "cycle_year": 1, "cycle_days": 11, "expire": "2026-09-08", "d_day": 69, "issued": 11, "used": 11.0, "remaining": 0.0, "next_date": "2026-09-09", "status": "사용완료"}, {"name": "임정민", "dept": "웹팀", "rank": "주임", "join": "2025-11-17", "tenure_y": 0.6, "cycle_year": 1, "cycle_days": 11, "expire": "2026-11-16", "d_day": 138, "issued": 11, "used": 8.0, "remaining": 3.0, "next_date": "2026-11-17", "status": "정상"}, {"name": "박민진", "dept": "", "rank": "", "join": "2026-04-27", "tenure_y": 0.2, "cycle_year": 1, "cycle_days": 11, "expire": "2027-04-26", "d_day": 299, "issued": 11, "used": 0.5, "remaining": 10.5, "next_date": "2027-04-27", "status": "정상"}], "urgent": [{"name": "강두원", "dept": "", "rank": "", "join": "2022-07-26", "tenure_y": 3.9, "cycle_year": 4, "cycle_days": 16, "expire": "2026-07-25", "d_day": 24, "issued": 57, "used": 44.0, "remaining": 13.0, "next_date": "2026-07-26", "status": "1개월"}, {"name": "우연형", "dept": "", "rank": "", "join": "2024-07-29", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-07-28", "d_day": 27, "issued": 26, "used": 22.0, "remaining": 4.0, "next_date": "2026-07-29", "status": "1개월"}, {"name": "김사랑", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-08-04", "d_day": 34, "issued": 26, "used": 22.5, "remaining": 3.5, "next_date": "2026-08-05", "status": "3개월"}, {"name": "임화영", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "cycle_days": 15, "expire": "2026-08-04", "d_day": 34, "issued": 26, "used": 23.5, "remaining": 2.5, "next_date": "2026-08-05", "status": "3개월"}, {"name": "나민지", "dept": "", "rank": "", "join": "2025-08-12", "tenure_y": 0.9, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-11", "d_day": 41, "issued": 11, "used": 10.5, "remaining": 0.5, "next_date": "2026-08-12", "status": "3개월"}, {"name": "김은혜", "dept": "웹디자인팀", "rank": "주임", "join": "2025-08-18", "tenure_y": 0.9, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-17", "d_day": 47, "issued": 11, "used": 10.0, "remaining": 1.0, "next_date": "2026-08-18", "status": "3개월"}, {"name": "김현우", "dept": "", "rank": "", "join": "2025-09-01", "tenure_y": 0.8, "cycle_year": 1, "cycle_days": 11, "expire": "2026-08-31", "d_day": 61, "issued": 11, "used": 0.5, "remaining": 10.5, "next_date": "2026-09-01", "status": "3개월"}, {"name": "최두학", "dept": "", "rank": "", "join": "2023-09-04", "tenure_y": 2.8, "cycle_year": 3, "cycle_days": 15, "expire": "2026-09-03", "d_day": 64, "issued": 41, "used": 27.5, "remaining": 13.5, "next_date": "2026-09-04", "status": "3개월"}, {"name": "김민현", "dept": "", "rank": "", "join": "2024-09-09", "tenure_y": 1.8, "cycle_year": 2, "cycle_days": 15, "expire": "2026-09-08", "d_day": 69, "issued": 26, "used": 25.0, "remaining": 1.0, "next_date": "2026-09-09", "status": "3개월"}, {"name": "이태경", "dept": "", "rank": "", "join": "2024-09-23", "tenure_y": 1.8, "cycle_year": 2, "cycle_days": 15, "expire": "2026-09-22", "d_day": 83, "issued": 26, "used": 17.0, "remaining": 9.0, "next_date": "2026-09-23", "status": "3개월"}]};
-
+const DATA = {"today": "2026-07-01", "total_emp": 27, "total_issued": 1178.0, "total_used": 981.0, "total_rem": 197.0, "employees": [{"name": "김동관", "dept": "", "rank": "", "join": "2020-06-16", "tenure_y": 6.0, "cycle_year": 7, "issued": 98.5, "used": 81.0, "remaining": 17.5, "recent_date": "2026-06-16"}, {"name": "이영호", "dept": "", "rank": "", "join": "2021-05-10", "tenure_y": 5.1, "cycle_year": 6, "issued": 88, "used": 67.0, "remaining": 21.0, "recent_date": "2026-05-10"}, {"name": "천현정", "dept": "", "rank": "", "join": "2018-12-17", "tenure_y": 7.5, "cycle_year": 8, "issued": 108, "used": 109.0, "remaining": -1.0, "recent_date": "2025-12-17"}, {"name": "송기용", "dept": "", "rank": "", "join": "2019-12-16", "tenure_y": 6.5, "cycle_year": 7, "issued": 97, "used": 87.0, "remaining": 10.0, "recent_date": "2025-12-16"}, {"name": "문미라", "dept": "", "rank": "", "join": "2021-05-06", "tenure_y": 5.2, "cycle_year": 6, "issued": 87.5, "used": 70.5, "remaining": 17.0, "recent_date": "2026-05-06"}, {"name": "이지은", "dept": "", "rank": "", "join": "2021-11-29", "tenure_y": 4.6, "cycle_year": 5, "issued": 73, "used": 63.0, "remaining": 10.0, "recent_date": "2025-11-29"}, {"name": "정예진", "dept": "", "rank": "", "join": "2022-01-02", "tenure_y": 4.5, "cycle_year": 5, "issued": 73, "used": 62.5, "remaining": 10.5, "recent_date": "2026-01-02"}, {"name": "정현주", "dept": "", "rank": "", "join": "2022-01-03", "tenure_y": 4.5, "cycle_year": 5, "issued": 73, "used": 71.0, "remaining": 2.0, "recent_date": "2026-01-03"}, {"name": "강두원", "dept": "", "rank": "", "join": "2022-07-26", "tenure_y": 3.9, "cycle_year": 4, "issued": 57, "used": 44.0, "remaining": 13.0, "recent_date": "2025-07-26"}, {"name": "김정란", "dept": "", "rank": "", "join": "2023-08-07", "tenure_y": 2.9, "cycle_year": 3, "issued": 41, "used": 41.0, "remaining": 0.0, "recent_date": "2025-08-07"}, {"name": "최두학", "dept": "", "rank": "", "join": "2023-09-04", "tenure_y": 2.8, "cycle_year": 3, "issued": 41, "used": 27.5, "remaining": 13.5, "recent_date": "2025-09-04"}, {"name": "이경민", "dept": "", "rank": "", "join": "2024-02-26", "tenure_y": 2.3, "cycle_year": 3, "issued": 41, "used": 22.5, "remaining": 18.5, "recent_date": "2026-02-26"}, {"name": "신혜리", "dept": "", "rank": "", "join": "2024-03-07", "tenure_y": 2.3, "cycle_year": 3, "issued": 41, "used": 26.0, "remaining": 15.0, "recent_date": "2026-03-07"}, {"name": "박상준", "dept": "웹팀", "rank": "차장", "join": "2024-07-02", "tenure_y": 2.0, "cycle_year": 2, "issued": 26, "used": 29.0, "remaining": -3.0, "recent_date": "2025-07-02"}, {"name": "우연형", "dept": "", "rank": "", "join": "2024-07-29", "tenure_y": 1.9, "cycle_year": 2, "issued": 26, "used": 22.0, "remaining": 4.0, "recent_date": "2025-07-29"}, {"name": "김사랑", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "issued": 26, "used": 22.5, "remaining": 3.5, "recent_date": "2025-08-05"}, {"name": "임화영", "dept": "", "rank": "", "join": "2024-08-05", "tenure_y": 1.9, "cycle_year": 2, "issued": 26, "used": 23.5, "remaining": 2.5, "recent_date": "2025-08-05"}, {"name": "김민현", "dept": "", "rank": "", "join": "2024-09-09", "tenure_y": 1.8, "cycle_year": 2, "issued": 26, "used": 25.0, "remaining": 1.0, "recent_date": "2025-09-09"}, {"name": "이태경", "dept": "", "rank": "", "join": "2024-09-23", "tenure_y": 1.8, "cycle_year": 2, "issued": 26, "used": 17.0, "remaining": 9.0, "recent_date": "2025-09-23"}, {"name": "이하나", "dept": "", "rank": "", "join": "2024-11-13", "tenure_y": 1.6, "cycle_year": 2, "issued": 26, "used": 18.5, "remaining": 7.5, "recent_date": "2025-11-13"}, {"name": "나민지", "dept": "", "rank": "", "join": "2025-08-12", "tenure_y": 0.9, "cycle_year": 1, "issued": 11, "used": 10.5, "remaining": 0.5, "recent_date": "2025-08-12"}, {"name": "홍재이", "dept": "웹팀", "rank": "주임", "join": "2025-08-13", "tenure_y": 0.9, "cycle_year": 1, "issued": 11, "used": 11.0, "remaining": 0.0, "recent_date": "2025-08-13"}, {"name": "김은혜", "dept": "웹디자인팀", "rank": "주임", "join": "2025-08-18", "tenure_y": 0.9, "cycle_year": 1, "issued": 11, "used": 10.0, "remaining": 1.0, "recent_date": "2025-08-18"}, {"name": "김현우", "dept": "", "rank": "", "join": "2025-09-01", "tenure_y": 0.8, "cycle_year": 1, "issued": 11, "used": 0.5, "remaining": 10.5, "recent_date": "2025-09-01"}, {"name": "김민주", "dept": "", "rank": "", "join": "2025-09-09", "tenure_y": 0.8, "cycle_year": 1, "issued": 11, "used": 11.0, "remaining": 0.0, "recent_date": "2025-09-09"}, {"name": "임정민", "dept": "웹팀", "rank": "주임", "join": "2025-11-17", "tenure_y": 0.6, "cycle_year": 1, "issued": 11, "used": 8.0, "remaining": 3.0, "recent_date": "2025-11-17"}, {"name": "박민진", "dept": "", "rank": "", "join": "2026-04-27", "tenure_y": 0.2, "cycle_year": 1, "issued": 11, "used": 0.5, "remaining": 10.5, "recent_date": "2026-04-27"}]};
 document.getElementById('today').textContent = DATA.today;
 document.getElementById('v-emp').textContent = DATA.total_emp + '명';
 document.getElementById('v-issued').textContent = DATA.total_issued.toFixed(1);
 document.getElementById('v-used').textContent = DATA.total_used.toFixed(1);
-const remEl = document.getElementById('v-rem');
-remEl.textContent = DATA.total_rem.toFixed(1);
-if (DATA.total_rem < 0) remEl.className = 'value warn';
-
-document.getElementById('urgent-count').textContent = DATA.urgent.length + '명';
-if (DATA.urgent.length === 0) {
-  document.getElementById('notice-box').innerHTML = '<strong>양호</strong> — 현재 3개월 이내 소멸 예정 직원 없음';
-  document.getElementById('urgent-count').className = 'badge ok';
-} else {
-  const critical = DATA.urgent.filter(u => u.status === '기한경과' || u.status === '1개월');
-  document.getElementById('notice-box').innerHTML = 
-    '<strong>즉시 통보 필요:</strong> ' + critical.length + '명 (기한경과/1개월 이내) — 통보양식 시트에서 본문 복사 후 발송<br>' +
-    '<strong>1차 통보 시점:</strong> ' + (DATA.urgent.length - critical.length) + '명 (3개월 이내) — 사용 계획 회신 요청';
-}
-
-const urgentBody = document.querySelector('#urgent-table tbody');
-DATA.urgent.forEach(u => {
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td><strong>${u.name}</strong></td>
-    <td>${u.dept}${u.rank ? ' · '+u.rank : ''}</td>
-    <td>${u.cycle_year}년차</td>
-    <td>${u.expire}</td>
-    <td>D-${u.d_day}</td>
-    <td class="${u.remaining > 0 ? 'rem-pos' : u.remaining < 0 ? 'rem-neg' : 'rem-zero'}">${u.remaining}</td>
-    <td><span class="status s-${u.status}">${u.status}</span></td>
-  `;
-  urgentBody.appendChild(tr);
-});
-
+document.getElementById('v-rem').textContent = DATA.total_rem.toFixed(1);
 document.getElementById('total-count').textContent = DATA.total_emp + '명';
-const allBody = document.querySelector('#all-table tbody');
-DATA.employees.sort((a,b) => {
-  const order = { '기한경과':0, '1개월':1, '3개월':2, '정상':3, '사용완료':4 };
-  return order[a.status] - order[b.status];
-});
+
+const body = document.querySelector('#all-table tbody');
+DATA.employees.sort((a,b) => a.name.localeCompare(b.name, 'ko'));
 DATA.employees.forEach(e => {
   const tr = document.createElement('tr');
   tr.innerHTML = `
@@ -134,10 +76,9 @@ DATA.employees.forEach(e => {
     <td>${e.issued}</td>
     <td>${e.used}</td>
     <td class="${e.remaining > 0 ? 'rem-pos' : e.remaining < 0 ? 'rem-neg' : 'rem-zero'}">${e.remaining}</td>
-    <td>${e.next_date}</td>
-    <td><span class="status s-${e.status}">${e.status}</span></td>
+    <td>${e.recent_date}</td>
   `;
-  allBody.appendChild(tr);
+  body.appendChild(tr);
 });
 </script>
 </body>
