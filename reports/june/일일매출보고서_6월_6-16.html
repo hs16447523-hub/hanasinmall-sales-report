@@ -65,9 +65,9 @@ body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,san
 .ssec-tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-top:none;font-size:12px;min-width:480px}
 /* v7.7 매출 카테고리 표만 컬럼 폭 고정 (카드·은행·분석 표는 원래 가변 폭 유지) */
 .ssec-tbl.ssec-sales{table-layout:fixed}
-.ssec-tbl.ssec-sales th:nth-child(1),.ssec-tbl.ssec-sales td:nth-child(1){width:170px;white-space:normal;word-break:keep-all}
-.ssec-tbl.ssec-sales th:nth-child(2),.ssec-tbl.ssec-sales td:nth-child(2){width:60px;text-align:center}
-.ssec-tbl.ssec-sales th:nth-child(3),.ssec-tbl.ssec-sales td:nth-child(3){width:115px}
+.ssec-tbl.ssec-sales th:nth-child(1),.ssec-tbl.ssec-sales td:nth-child(1){width:105px;white-space:normal;word-break:keep-all;padding:5px 6px}
+.ssec-tbl.ssec-sales th:nth-child(2),.ssec-tbl.ssec-sales td:nth-child(2){width:40px;text-align:center;padding:5px 2px}
+.ssec-tbl.ssec-sales th:nth-child(3),.ssec-tbl.ssec-sales td:nth-child(3){width:88px;padding:5px 6px}
 .ssec-tbl th{background:var(--acc);padding:6px 8px;font-size:11px;font-weight:600;color:var(--p);text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
 .ssec-tbl td{padding:5px 8px;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:middle}
 .ssec-tbl td.amt,.ssec-tbl td.amt-main{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
@@ -86,13 +86,21 @@ body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,san
 .dtl th{background:#dde6f0;padding:4px 7px;font-weight:600;color:var(--p);text-align:left}
 .dtl td{padding:3px 7px;border-bottom:1px solid #e6ecf3;word-break:break-all}
 .dtl td.amt{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+/* v9.18 카드 상세 표 - 가맹점 최대 폭 */
+.dtl.dtl-card{table-layout:fixed;width:100%}
+.dtl.dtl-card th:nth-child(1),.dtl.dtl-card td:nth-child(1){width:76px;font-size:10px;padding:3px 5px}
+.dtl.dtl-card th:nth-child(2),.dtl.dtl-card td:nth-child(2){width:42px;font-size:10px;padding:3px 4px}
+.dtl.dtl-card th:nth-child(3),.dtl.dtl-card td:nth-child(3){white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 6px}
+.dtl.dtl-card th:nth-child(4),.dtl.dtl-card td:nth-child(4){width:68px;text-align:center;padding:3px 4px}
+.dtl.dtl-card th:nth-child(5),.dtl.dtl-card td:nth-child(5){width:78px;text-align:right;padding:3px 6px}
+.dtl.dtl-card td[title]{cursor:help}
 /* v7.4 매출상세 4컬럼 정렬 (채널/품명/거래처/금액) */
 /* v7.6 매출상세 컬럼 비율 1:4:3:2 (총 10) — 비율 초과 텍스트는 잘림(...) + hover 시 tooltip */
 .dtl-sales{table-layout:fixed;width:100%}
-.dtl-sales col.c-ch{width:10%}
-.dtl-sales col.c-mer{width:40%}
-.dtl-sales col.c-bz{width:30%}
-.dtl-sales col.c-amt{width:20%}
+.dtl-sales col.c-ch{width:6%}
+.dtl-sales col.c-mer{width:52%}
+.dtl-sales col.c-bz{width:27%}
+.dtl-sales col.c-amt{width:15%}
 .dtl-sales td,.dtl-sales th{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dtl-sales th:nth-child(4),.dtl-sales td:nth-child(4){text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .dtl-sales th:nth-child(3),.dtl-sales td:nth-child(3){font-size:10px;color:#445}
@@ -111,6 +119,10 @@ body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,san
 .om-tbl th{background:#f5f9fd;padding:4px 7px;border-bottom:1px solid var(--bd);font-weight:600;text-align:left}
 .om-tbl td{padding:4px 7px;border-bottom:1px solid #eef2f7}
 .card-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:10px}
+.card-cat-tbl{table-layout:fixed;min-width:0!important}
+.card-cat-tbl th:nth-child(1),.card-cat-tbl td:nth-child(1){width:auto;padding-left:8px}
+.card-cat-tbl th:nth-child(2),.card-cat-tbl td:nth-child(2){width:48px;text-align:center;padding:5px 3px}
+.card-cat-tbl th:nth-child(3),.card-cat-tbl td:nth-child(3){width:92px;text-align:right;padding:5px 8px}
 .card-cell-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:5px;padding-bottom:3px;border-bottom:1px solid var(--bd)}
 .card-no code{font-family:monospace;font-size:10px;background:#f0f4f8;padding:1px 5px;border-radius:3px;color:var(--p2)}
 .block.analysis{background:#fafdff}
