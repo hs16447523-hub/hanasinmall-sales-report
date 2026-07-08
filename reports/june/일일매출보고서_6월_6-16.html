@@ -114,7 +114,20 @@ body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,san
 .inflow-hdr{font-size:11px;font-weight:600;color:var(--p);margin-bottom:4px}
 .inflow-amount{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
 .inflow-cnt{font-size:10px;color:var(--mu);margin-bottom:6px}
+.inflow-section{border-left:4px solid #1a7a3c;padding:10px 12px;background:linear-gradient(to right,#eaf7ee,transparent 50%);border-radius:0 7px 7px 0;margin-bottom:8px}
 .outflow-section{margin-top:10px;border-left:4px solid var(--r);padding:10px 12px;background:linear-gradient(to right,var(--rbg),transparent 50%);border-radius:0 7px 7px 0}
+/* v9.20 입출금 표 컬럼 폭 통일 (카테고리 auto / 건수 60px 중앙 / 금액 130px 우측 / 상세 auto) */
+.io-tbl{table-layout:fixed}
+.io-tbl th:nth-child(1),.io-tbl td:nth-child(1){width:auto;padding-left:10px;font-weight:600}
+.io-tbl th:nth-child(2),.io-tbl td:nth-child(2){width:60px;text-align:center;padding:6px 4px}
+.io-tbl th:nth-child(3),.io-tbl td:nth-child(3){width:130px;text-align:right;padding:6px 10px;font-weight:700;font-variant-numeric:tabular-nums}
+.io-tbl th:nth-child(4),.io-tbl td:nth-child(4){width:78px;text-align:center;padding:6px 6px}
+.io-tbl th{background:#f5f9fd;padding:7px 10px;border-bottom:1px solid var(--bd);font-weight:600;font-size:11px;color:var(--p)}
+.io-tbl td{padding:7px 8px;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:middle}
+.io-tbl tr:hover td{background:rgba(0,0,0,0.02)}
+.io-tbl tr:last-child td{border-bottom:none}
+.io-tbl summary{cursor:pointer;font-size:10px;color:var(--p2);font-weight:600}
+.io-tbl details[open] summary{color:var(--p)}
 .om-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:5px;min-width:380px}
 .om-tbl th{background:#f5f9fd;padding:4px 7px;border-bottom:1px solid var(--bd);font-weight:600;text-align:left}
 .om-tbl td{padding:4px 7px;border-bottom:1px solid #eef2f7}
