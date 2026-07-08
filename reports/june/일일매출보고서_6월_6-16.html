@@ -116,12 +116,19 @@ body{font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,san
 .inflow-cnt{font-size:10px;color:var(--mu);margin-bottom:6px}
 .inflow-section{border-left:4px solid #1a7a3c;padding:10px 12px;background:linear-gradient(to right,#eaf7ee,transparent 50%);border-radius:0 7px 7px 0;margin-bottom:8px}
 .outflow-section{margin-top:10px;border-left:4px solid var(--r);padding:10px 12px;background:linear-gradient(to right,var(--rbg),transparent 50%);border-radius:0 7px 7px 0}
-/* v9.20.2 입출금 표 컬럼 폭 (카테고리 220px / 건수 60px / 금액 140px 고정, 상세는 남는 공간 auto) */
+/* v9.20.3 입출금 표 컬럼 좁히기 (카테고리 130 / 건수 52 / 금액 118 / 상세 남은 auto) */
 .io-tbl{table-layout:fixed;width:100%}
-.io-tbl th:nth-child(1),.io-tbl td:nth-child(1){width:220px;padding:7px 12px;font-weight:600;vertical-align:top}
-.io-tbl th:nth-child(2),.io-tbl td:nth-child(2){width:60px;text-align:center;padding:7px 4px;vertical-align:top}
-.io-tbl th:nth-child(3),.io-tbl td:nth-child(3){width:140px;text-align:right;padding:7px 12px;font-weight:700;font-variant-numeric:tabular-nums;vertical-align:top}
-.io-tbl th:nth-child(4),.io-tbl td:nth-child(4){width:auto;padding:7px 8px;vertical-align:top}
+.io-tbl th:nth-child(1),.io-tbl td:nth-child(1){width:130px;padding:6px 8px;font-weight:600;vertical-align:top;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.io-tbl th:nth-child(2),.io-tbl td:nth-child(2){width:52px;text-align:center;padding:6px 2px;vertical-align:top}
+.io-tbl th:nth-child(3),.io-tbl td:nth-child(3){width:118px;text-align:right;padding:6px 8px;font-weight:700;font-variant-numeric:tabular-nums;vertical-align:top;white-space:nowrap}
+.io-tbl th:nth-child(4),.io-tbl td:nth-child(4){width:auto;padding:6px 6px;vertical-align:top}
+/* v9.20.3 은행 상세표 (dtl-bank): 한 줄 강제 + 컬럼 폭 명시 */
+.dtl.dtl-bank{table-layout:fixed;width:100%;min-width:0}
+.dtl.dtl-bank th:nth-child(1),.dtl.dtl-bank td:nth-child(1){width:148px;font-size:10px;white-space:nowrap;padding:3px 6px}
+.dtl.dtl-bank th:nth-child(2),.dtl.dtl-bank td:nth-child(2){width:32%;padding:3px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtl.dtl-bank th:nth-child(3),.dtl.dtl-bank td:nth-child(3){width:auto;padding:3px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtl.dtl-bank th:nth-child(4),.dtl.dtl-bank td:nth-child(4){width:96px;text-align:right;padding:3px 6px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dtl.dtl-bank td[title]{cursor:help}
 .io-tbl th{background:#f5f9fd;padding:7px 10px;border-bottom:1px solid var(--bd);font-weight:600;font-size:11px;color:var(--p)}
 .io-tbl td{padding:7px 8px;font-size:12px;border-bottom:1px solid #eef2f7;vertical-align:middle}
 .io-tbl tr:hover td{background:rgba(0,0,0,0.02)}
