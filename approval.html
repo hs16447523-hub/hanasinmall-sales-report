@@ -193,7 +193,7 @@ function fbDaysLeft(){
   var end=new Date(FB_DEADLINE+'T23:59:59');
   return Math.ceil((end - new Date())/86400000);
 }
-function fbDone(){ try{return localStorage.getItem('fb_rules_done')==='1';}catch(e){return false;} }
+function fbDone(){ try{return localStorage.getItem('fb_rules_done_v2')==='1';}catch(e){return false;} }
 function fbReminderHtml(){
   if(fbDone()) return '<div class="todaybar">오늘 '+fmt(nowISO()).split(' ')[0]+'</div>';
   var dl=fbDaysLeft();
@@ -207,7 +207,10 @@ function fbReminderHtml(){
 }
 function bindFbReminder(){
   var b=document.getElementById('fbDoneBtn');
-  if(b) b.onclick=function(){ try{localStorage.setItem('fb_rules_done','1');}catch(e){} route(); };
+  if(b) b.onclick=function(){
+    if(!confirm('Firebase 규칙을 실제로 변경하셨나요?\n확인을 누르면 이 안내가 사라집니다. (아직 안 바꿨으면 취소)')) return;
+    try{localStorage.setItem('fb_rules_done_v2','1');}catch(e){} route();
+  };
 }
 
 /* ===== 실시간 스트림 정리 ===== */
