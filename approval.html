@@ -95,6 +95,16 @@
     font-weight:700;color:var(--sub);cursor:pointer;font-size:13px}
   .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   .empty{color:#9aa7b4;font-size:12.5px;text-align:center;padding:16px 0;border:1px dashed var(--line);border-radius:9px;margin-top:10px}
+  /* Firebase 규칙 변경 안내 */
+  .fbrem{background:#fff8e1;border:1px solid #f0d98a;border-radius:12px;padding:12px 14px;margin-bottom:12px}
+  .fbrem.urgent{background:#fdecea;border-color:#f1a9a0}
+  .fbrem .t{font-weight:800;color:#8a6d00;font-size:13.5px}
+  .fbrem.urgent .t{color:var(--no)}
+  .fbrem .s{font-size:11.5px;color:#6b5b2a;margin-top:4px;line-height:1.5}
+  .fbrem.urgent .s{color:#7a3b34}
+  .fbrem .x{margin-top:9px;background:#fff;border:1px solid #e0d3a0;border-radius:8px;padding:7px 10px;
+    font-size:11.5px;font-weight:700;color:#8a6d00;cursor:pointer;width:100%}
+  .todaybar{font-size:11.5px;color:var(--sub);text-align:right;margin:-6px 2px 8px;font-weight:600}
   /* 결재 현황 */
   .live{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ok);
     margin-left:auto;background:var(--okbg);padding:3px 9px;border-radius:20px}
@@ -177,6 +187,29 @@ function fallbackCopy(text,msg){
   document.body.removeChild(ta);
 }
 
+/* ===== Firebase 규칙 변경 안내 (테스트 모드 만료 대비) ===== */
+var FB_DEADLINE='2026-08-16';
+function fbDaysLeft(){
+  var end=new Date(FB_DEADLINE+'T23:59:59');
+  return Math.ceil((end - new Date())/86400000);
+}
+function fbDone(){ try{return localStorage.getItem('fb_rules_done')==='1';}catch(e){return false;} }
+function fbReminderHtml(){
+  if(fbDone()) return '<div class="todaybar">오늘 '+fmt(nowISO()).split(' ')[0]+'</div>';
+  var dl=fbDaysLeft();
+  var urgent = dl<=10;
+  var dtxt = dl>=0 ? 'D-'+dl : '기한 지남!';
+  return '<div class="fbrem'+(urgent?' urgent':'')+'">'+
+    '<div class="t">⚠️ Firebase 규칙 변경 '+dtxt+' — 기한 2026.08.16</div>'+
+    '<div class="s">오늘 <b>'+fmt(nowISO()).split(' ')[0]+'</b> · 이 날짜까지 Firebase 규칙을 한 번만 바꾸면 <b>영구 해결</b>됩니다. 안 바꾸면 결재 시스템이 멈춥니다.<br>콘솔 → Realtime Database → 규칙 → 저장된 안내 JSON 붙여넣고 게시.</div>'+
+    '<button class="x" id="fbDoneBtn">✔ 규칙 변경 완료했어요 (이 안내 숨기기)</button>'+
+  '</div>';
+}
+function bindFbReminder(){
+  var b=document.getElementById('fbDoneBtn');
+  if(b) b.onclick=function(){ try{localStorage.setItem('fb_rules_done','1');}catch(e){} route(); };
+}
+
 /* ===== 실시간 스트림 정리 ===== */
 function closeES(){
   if(window._es){ try{window._es.close();}catch(e){} window._es=null; }
@@ -207,8 +240,8 @@ function bindTabs(){
 function renderForm(pre){
   pre = pre || {};
   var app=document.getElementById('app');
-  app.innerHTML = tabsHtml('new')+'<div id="pane"></div>';
-  bindTabs();
+  app.innerHTML = fbReminderHtml()+tabsHtml('new')+'<div id="pane"></div>';
+  bindTabs(); bindFbReminder();
 
   var items = (pre.items&&pre.items.length)? pre.items.slice() : [];
 
@@ -321,7 +354,7 @@ function renderForm(pre){
 /* ===== 결재 현황 (Firebase 실시간) ===== */
 function renderStatus(){
   var app=document.getElementById('app');
-  app.innerHTML = tabsHtml('list')+
+  app.innerHTML = fbReminderHtml()+tabsHtml('list')+
   '<div class="card">'+
     '<h2 class="sec">결재 현황 <span class="live"><span class="dot"></span>실시간</span></h2>'+
     '<div class="stfilter">'+
@@ -333,7 +366,7 @@ function renderStatus(){
     '<div id="stBody"><div class="empty">불러오는 중…</div></div>'+
     '<div class="hint">대표님이 승인/반려하면 이 화면이 <b>자동</b>으로 바뀝니다(새로고침 불필요). 항목을 누르면 상세 결재문서가 열립니다.</div>'+
   '</div>';
-  bindTabs();
+  bindTabs(); bindFbReminder();
   var store={}, filter='all';
   var body=document.getElementById('stBody');
   document.querySelectorAll('.stfilter button').forEach(function(b){
