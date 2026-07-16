@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하나사인몰 전자결재 · 지출/이체 결재</title>
+<style>
+  :root{
+    --navy:#1f3a5f; --navy2:#274c78; --line:#dfe4ea; --bg:#f4f6f9;
+    --ink:#1b2733; --sub:#5b6b7b; --ok:#1a7f4b; --okbg:#e7f6ee;
+    --no:#c0392b; --nobg:#fbeceb; --wait:#b8860b; --waitbg:#fdf6e3;
+    --accent:#2f6fed;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto;padding:16px 14px 60px}
+  header.brand{display:flex;align-items:center;gap:10px;padding:6px 2px 14px}
+  header.brand .logo{width:36px;height:36px;border-radius:9px;background:var(--navy);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:-1px}
+  header.brand b{font-size:16px}
+  header.brand span{color:var(--sub);font-size:12px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(20,40,70,.05)}
+  h2.sec{font-size:15px;margin:2px 0 14px;color:var(--navy);display:flex;align-items:center;gap:7px}
+  h2.sec:before{content:"";width:4px;height:15px;background:var(--navy);border-radius:2px;display:inline-block}
+  label{display:block;font-size:12.5px;color:var(--sub);margin:12px 0 5px;font-weight:600}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;
+    font-size:15px;font-family:inherit;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,111,237,.12)}
+  textarea{min-height:64px;resize:vertical}
+  .row2{display:flex;gap:10px}.row2>div{flex:1}
+  .items{margin-top:6px}
+  .item{display:grid;grid-template-columns:1fr 62px 96px 34px;gap:6px;margin-bottom:7px;align-items:center}
+  .item input{padding:9px 9px;font-size:14px}
+  .item .del{border:1px solid var(--line);background:#fff;border-radius:8px;height:38px;cursor:pointer;
+    color:var(--no);font-size:17px;line-height:1}
+  .item .amt{text-align:right}
+  .additem{width:100%;padding:9px;border:1px dashed #b9c4d0;background:#fafcff;border-radius:9px;
+    color:var(--navy2);font-weight:600;cursor:pointer;font-size:13.5px;margin-top:2px}
+  .hint{font-size:11.5px;color:#8494a3;margin-top:5px}
+  .totalbar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:13px 14px;
+    background:var(--navy);color:#fff;border-radius:11px;font-size:15px}
+  .totalbar b{font-size:20px}
+  .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;
+    cursor:pointer;margin-top:14px;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#fff}
+  .btn.approve{background:var(--ok);color:#fff}
+  .btn.reject{background:#fff;color:var(--no);border:1.5px solid var(--no);margin-top:10px}
+  .btn.ghost{background:#fff;color:var(--navy2);border:1.5px solid var(--line)}
+  .btn:active{transform:translateY(1px)}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+
+  /* 결재 문서 뷰 */
+  .doc-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
+    border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:4px}
+  .doc-title{font-size:19px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
+  .doc-no{font-size:11.5px;color:var(--sub);margin-top:3px}
+  .stampbox{border:1px solid var(--navy);border-radius:8px;overflow:hidden;min-width:108px;flex-shrink:0}
+  .stampbox .st-h{background:var(--navy);color:#fff;font-size:11px;text-align:center;padding:3px}
+  .stampbox .st-b{min-height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;font-size:11px;color:var(--sub);position:relative;padding:8px 4px}
+  .stampbox.approved .st-b{color:var(--ok)}
+  .stampbox.rejected .st-b{color:var(--no)}
+  .stampbox .mark{font-size:16px;font-weight:800;border:2.5px solid currentColor;border-radius:50%;
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;transform:rotate(-8deg);margin-bottom:1px}
+  .stampbox .who{font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.1}
+  .stampbox .when{font-size:9px;color:#8494a3;line-height:1.1}
+  table.kv{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px}
+  table.kv th,table.kv td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  table.kv th{background:#f7f9fc;color:var(--sub);width:34%;font-weight:600;white-space:nowrap}
+  table.det{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+  table.det th,table.det td{border:1px solid var(--line);padding:8px 9px}
+  table.det th{background:#f7f9fc;color:var(--sub);font-weight:600;font-size:12px}
+  table.det td.n{text-align:right;white-space:nowrap}
+  table.det tr.sum td{background:#fbfcfe;font-weight:800;color:var(--navy);font-size:14px}
+  .banner{padding:15px;border-radius:12px;text-align:center;margin-bottom:14px;font-weight:700}
+  .banner.ok{background:var(--okbg);color:var(--ok)}
+  .banner.no{background:var(--nobg);color:var(--no)}
+  .banner.wait{background:var(--waitbg);color:var(--wait)}
+  .banner .big{font-size:20px;display:block;margin-bottom:3px}
+  .banner .sm{font-size:12.5px;font-weight:600;opacity:.9}
+  .linkbox{margin-top:12px;background:#f7f9fc;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .linkbox .lk{font-size:12px;color:var(--navy2);word-break:break-all;background:#fff;border:1px solid var(--line);
+    border-radius:7px;padding:9px;max-height:76px;overflow:auto}
+  .steps{font-size:12.5px;color:var(--sub);margin:9px 0 0;padding-left:18px}
+  .steps li{margin:3px 0}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1b2733;color:#fff;
+    padding:11px 18px;border-radius:24px;font-size:13.5px;opacity:0;pointer-events:none;transition:.25s;z-index:9}
+  .toast.show{opacity:1}
+  .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
+  .pill.pay{background:#eef3ff;color:var(--accent)}
+  .memo{white-space:pre-wrap;font-size:13px;color:var(--ink)}
+  .foot{text-align:center;font-size:11px;color:#9aa7b4;margin-top:18px}
+  .ledger{margin-top:4px}
+  .ledger table{width:100%;border-collapse:collapse;font-size:12px}
+  .ledger td,.ledger th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:left}
+  .ledger th{color:var(--sub);font-size:11px}
+  .ledger a{color:var(--accent);text-decoration:none}
+  .ledger .s{font-weight:700}.ledger .s.a{color:var(--ok)}.ledger .s.r{color:var(--no)}.ledger .s.w{color:var(--wait)}
+  .tabs{display:flex;gap:6px;margin-bottom:14px}
+  .tabs button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:9px;
+    font-weight:700;color:var(--sub);cursor:pointer;font-size:13px}
+  .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .empty{color:#9aa7b4;font-size:12.5px;text-align:center;padding:16px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <div class="logo">HS</div>
+    <div><b>하나사인몰 전자결재</b><br><span>지출 · 이체 결재 요청 / 승인</span></div>
+  </header>
+  <div id="app"></div>
+  <div class="foot">하나사인몰 웹팀 · 카톡 결재 대체용 · 서버 없이 링크로 주고받는 결재</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 유틸: 한글 안전 URL-safe base64 ===== */
+function enc(obj){
+  var s = JSON.stringify(obj);
+  var b64 = btoa(unescape(encodeURIComponent(s)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function dec(str){
+  try{
+    var b64 = str.replace(/-/g,'+').replace(/_/g,'/');
+    while(b64.length%4) b64+='=';
+    return JSON.parse(decodeURIComponent(escape(atob(b64))));
+  }catch(e){return null;}
+}
+function won(n){ n=Number(n)||0; return n.toLocaleString('ko-KR')+'원'; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
+function pad(n){return n<10?'0'+n:''+n;}
+function nowISO(){ return new Date().toISOString(); }
+function fmt(iso){
+  if(!iso) return '';
+  var d=new Date(iso); if(isNaN(d)) return iso;
+  return d.getFullYear()+'.'+pad(d.getMonth()+1)+'.'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+}
+function docNo(){
+  var d=new Date();
+  var r=Math.floor(Math.random()*900+100);
+  return 'HS-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+r;
+}
+function baseUrl(){ return location.origin + location.pathname; }
+function toast(m){
+  var t=document.getElementById('toast'); t.textContent=m; t.classList.add('show');
+  clearTimeout(window._tt); window._tt=setTimeout(function(){t.classList.remove('show');},1800);
+}
+function copy(text,msg){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(function(){toast(msg||'복사되었습니다');},function(){fallbackCopy(text,msg);});
+  }else{fallbackCopy(text,msg);}
+}
+function fallbackCopy(text,msg){
+  var ta=document.createElement('textarea'); ta.value=text;
+  ta.style.position='fixed';ta.style.opacity='0'; document.body.appendChild(ta);
+  ta.select(); try{document.execCommand('copy');toast(msg||'복사되었습니다');}catch(e){toast('복사 실패 — 링크를 길게 눌러 복사하세요');}
+  document.body.removeChild(ta);
+}
+
+/* ===== 로컬 결재대장 (이 기기 편의용, 없어도 동작) ===== */
+var LKEY='hs_approval_ledger_v1';
+function ledgerLoad(){ try{return JSON.parse(localStorage.getItem(LKEY)||'[]');}catch(e){return[];} }
+function ledgerSave(a){ try{localStorage.setItem(LKEY,JSON.stringify(a.slice(-50)));}catch(e){} }
+function ledgerAdd(rec){
+  var a=ledgerLoad();
+  var i=a.findIndex(function(x){return x.no===rec.no;});
+  if(i>=0) a[i]=Object.assign(a[i],rec); else a.push(rec);
+  ledgerSave(a);
+}
+
+/* ===== 상태 결정 ===== */
+function route(){
+  var h=location.hash.slice(1);
+  if(h.indexOf('done=')===0){ var d=dec(h.slice(5)); if(d) return renderDone(d); }
+  if(h.indexOf('req=')===0){ var r=dec(h.slice(4)); if(r) return renderApprove(r); }
+  return renderForm();
+}
+
+/* ===== 1) 작성 폼 ===== */
+function renderForm(pre){
+  pre = pre || {};
+  var app=document.getElementById('app');
+  app.innerHTML =
+  '<div class="tabs"><button class="on" id="tabNew">새 결재요청</button><button id="tabLedger">결재 대장</button></div>'+
+  '<div id="pane"></div>';
+  document.getElementById('tabNew').onclick=function(){renderForm();};
+  document.getElementById('tabLedger').onclick=function(){renderLedger();};
+  var pane=document.getElementById('pane');
+  pane.innerHTML =
+  '<div class="card">'+
+    '<h2 class="sec">결재요청 작성</h2>'+
+    '<label>건명 / 제목</label>'+
+    '<input id="f_title" placeholder="예) 인쇄마을 이체 결재요청" value="'+esc(pre.title||'')+'">'+
+    '<div class="row2">'+
+      '<div><label>요청자</label><input id="f_req" list="names" placeholder="이름" value="'+esc(pre.requester||'')+'">'+
+        '<datalist id="names"><option>박상준</option><option>황국인</option><option>김은혜</option><option>홍재이</option><option>임정민</option><option>천현정</option></datalist></div>'+
+      '<div><label>거래처</label><input id="f_vendor" placeholder="예) 인쇄마을" value="'+esc(pre.vendor||'')+'"></div>'+
+    '</div>'+
+    '<div class="row2">'+
+      '<div><label>결제/지출 유형</label><select id="f_pay">'+
+        ['이체','카드','현금','기타'].map(function(o){return '<option'+(pre.payType===o?' selected':'')+'>'+o+'</option>';}).join('')+
+      '</select></div>'+
+      '<div><label>판매가(참고, 선택)</label><input id="f_sale" inputmode="numeric" placeholder="예) 391600" value="'+esc(pre.salePrice||'')+'"></div>'+
+    '</div>'+
+    '<div id="bankwrap"></div>'+
+    '<label>지출 내역</label>'+
+    '<div class="items" id="items"></div>'+
+    '<button class="additem" id="addItem">+ 항목 추가</button>'+
+    '<div class="hint">항목명 · 수량 · 금액(원)을 입력하세요. 합계는 자동 계산됩니다.</div>'+
+    '<label>비고 / 메모</label>'+
+    '<textarea id="f_memo" placeholder="특이사항, 지급 사유 등">'+esc(pre.memo||'')+'</textarea>'+
+    '<div class="totalbar">합계 금액 <b id="totalView">0원</b></div>'+
+    '<button class="btn primary" id="makeLink">결재요청 링크 생성</button>'+
+    '<div id="linkOut"></div>'+
+  '</div>';
+
+  function renderBank(){
+    var t=document.getElementById('f_pay').value;
+    var w=document.getElementById('bankwrap');
+    if(t==='이체'){
+      w.innerHTML='<div class="row2"><div><label>은행</label><input id="f_bank" placeholder="예) 국민" value="'+esc(pre.bank||'')+'"></div>'+
+        '<div><label>예금주</label><input id="f_holder" placeholder="예) 인쇄마을" value="'+esc(pre.holder||'')+'"></div></div>'+
+        '<label>계좌번호</label><input id="f_acct" placeholder="계좌번호" value="'+esc(pre.account||'')+'">';
+    }else{ w.innerHTML=''; }
+  }
+  document.getElementById('f_pay').addEventListener('change',renderBank);
+  renderBank();
+
+  var items = (pre.items&&pre.items.length)?pre.items.slice():[{name:'',qty:'1',amount:''}];
+  function drawItems(){
+    var box=document.getElementById('items');
+    box.innerHTML=items.map(function(it,i){
+      return '<div class="item">'+
+        '<input placeholder="항목명" value="'+esc(it.name)+'" data-i="'+i+'" data-k="name">'+
+        '<input class="amt" inputmode="numeric" placeholder="수량" value="'+esc(it.qty)+'" data-i="'+i+'" data-k="qty">'+
+        '<input class="amt" inputmode="numeric" placeholder="금액" value="'+esc(it.amount)+'" data-i="'+i+'" data-k="amount">'+
+        '<button class="del" data-del="'+i+'">×</button></div>';
+    }).join('');
+    box.querySelectorAll('input').forEach(function(inp){
+      inp.addEventListener('input',function(){
+        items[+inp.dataset.i][inp.dataset.k]=inp.value; calcTotal();
+      });
+    });
+    box.querySelectorAll('.del').forEach(function(b){
+      b.onclick=function(){ if(items.length>1){items.splice(+b.dataset.del,1);drawItems();calcTotal();} };
+    });
+  }
+  function calcTotal(){
+    var t=items.reduce(function(s,it){return s+(Number(String(it.amount).replace(/[^0-9]/g,''))||0);},0);
+    document.getElementById('totalView').textContent=won(t);
+    return t;
+  }
+  document.getElementById('addItem').onclick=function(){items.push({name:'',qty:'1',amount:''});drawItems();};
+  drawItems(); calcTotal();
+
+  document.getElementById('makeLink').onclick=function(){
+    var title=document.getElementById('f_title').value.trim();
+    var requester=document.getElementById('f_req').value.trim();
+    if(!title){toast('건명을 입력하세요');return;}
+    if(!requester){toast('요청자를 입력하세요');return;}
+    var clean=items.filter(function(it){return it.name||it.amount;})
+      .map(function(it){return {name:it.name,qty:it.qty,amount:Number(String(it.amount).replace(/[^0-9]/g,''))||0};});
+    if(!clean.length){toast('지출 내역을 1개 이상 입력하세요');return;}
+    var pay=document.getElementById('f_pay').value;
+    var data={
+      no: pre.no||docNo(), title:title, requester:requester,
+      vendor:document.getElementById('f_vendor').value.trim(),
+      payType:pay,
+      bank: pay==='이체'?(document.getElementById('f_bank')||{}).value||'':'',
+      holder: pay==='이체'?(document.getElementById('f_holder')||{}).value||'':'',
+      account: pay==='이체'?(document.getElementById('f_acct')||{}).value||'':'',
+      salePrice: (document.getElementById('f_sale').value||'').replace(/[^0-9]/g,''),
+      items:clean, total:calcTotal(),
+      memo:document.getElementById('f_memo').value.trim(),
+      reqAt: pre.reqAt||nowISO()
+    };
+    var url = baseUrl()+'#req='+enc(data);
+    ledgerAdd({no:data.no,title:data.title,total:data.total,status:'wait',reqAt:data.reqAt,reqUrl:url});
+    var out=document.getElementById('linkOut');
+    out.innerHTML =
+      '<div class="linkbox">'+
+        '<div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:8px">✅ 결재요청 링크가 생성되었습니다</div>'+
+        '<div class="lk" id="theLink">'+esc(url)+'</div>'+
+        '<button class="btn primary" style="margin-top:10px" id="cp">링크 복사</button>'+
+        '<button class="btn ghost" style="margin-top:8px" id="pv">내가 먼저 미리보기</button>'+
+        '<ol class="steps">'+
+          '<li>이 링크를 <b>복사</b>해서 대표님께 카톡으로 전송하세요.</li>'+
+          '<li>대표님이 링크를 열면 결재 문서가 보이고, <b>승인/반려</b> 버튼이 나옵니다.</li>'+
+          '<li>대표님이 승인하면 <b>결재완료 링크</b>가 생성되며, 그 링크를 회신받으면 승인 기록(이름·시간)이 남습니다.</li>'+
+        '</ol>'+
+      '</div>';
+    document.getElementById('cp').onclick=function(){copy(url,'결재요청 링크 복사됨 — 카톡으로 보내세요');};
+    document.getElementById('pv').onclick=function(){location.hash='req='+enc(data);};
+    out.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+}
+
+/* ===== 결재 대장 (이 기기) ===== */
+function renderLedger(){
+  var app=document.getElementById('app');
+  app.innerHTML =
+  '<div class="tabs"><button id="tabNew">새 결재요청</button><button class="on" id="tabLedger">결재 대장</button></div>'+
+  '<div class="card ledger"><h2 class="sec">결재 대장 (이 기기 기록)</h2><div id="lgbody"></div>'+
+  '<div class="hint" style="margin-top:12px">이 목록은 <b>이 기기(브라우저)</b>에만 저장되는 편의 기록입니다. 공식 증빙은 각 건의 결재완료 링크입니다.</div></div>';
+  document.getElementById('tabNew').onclick=function(){renderForm();};
+  document.getElementById('tabLedger').onclick=function(){renderLedger();};
+  var a=ledgerLoad().slice().reverse();
+  var body=document.getElementById('lgbody');
+  if(!a.length){ body.innerHTML='<div class="empty">아직 기록이 없습니다.</div>'; return; }
+  var smap={wait:['w','대기'],approved:['a','승인'],rejected:['r','반려']};
+  body.innerHTML='<table><tr><th>건명</th><th>금액</th><th>상태</th><th>링크</th></tr>'+
+    a.map(function(x){
+      var s=smap[x.status]||smap.wait;
+      var lk=x.status==='wait'?(x.reqUrl?'<a href="'+esc(x.reqUrl)+'">요청</a>':''):(x.doneUrl?'<a href="'+esc(x.doneUrl)+'">결과</a>':'');
+      return '<tr><td>'+esc(x.title)+'<br><span style="color:#9aa7b4;font-size:10.5px">'+esc(x.no)+'</span></td>'+
+        '<td class="s">'+won(x.total)+'</td><td class="s '+s[0]+'">'+s[1]+'</td><td>'+lk+'</td></tr>';
+    }).join('')+'</table>';
+}
+
+/* ===== 문서 본문 렌더 (결재/완료 공용) ===== */
+function docBody(d){
+  var rows='';
+  rows+='<tr><th>문서번호</th><td>'+esc(d.no)+'</td></tr>';
+  rows+='<tr><th>요청자</th><td>'+esc(d.requester)+'</td></tr>';
+  rows+='<tr><th>요청일시</th><td>'+fmt(d.reqAt)+'</td></tr>';
+  if(d.vendor) rows+='<tr><th>거래처</th><td>'+esc(d.vendor)+'</td></tr>';
+  rows+='<tr><th>지출유형</th><td><span class="pill pay">'+esc(d.payType||'-')+'</span></td></tr>';
+  if(d.payType==='이체'&&(d.bank||d.account||d.holder))
+    rows+='<tr><th>이체계좌</th><td>'+esc(d.bank)+' '+esc(d.account)+(d.holder?' ('+esc(d.holder)+')':'')+'</td></tr>';
+  if(d.salePrice) rows+='<tr><th>판매가(참고)</th><td>'+won(d.salePrice)+'</td></tr>';
+
+  var det='<table class="det"><tr><th style="width:8%">No</th><th>항목</th><th style="width:16%">수량</th><th style="width:26%">금액</th></tr>'+
+    (d.items||[]).map(function(it,i){
+      return '<tr><td class="n">'+(i+1)+'</td><td>'+esc(it.name)+'</td><td class="n">'+esc(it.qty||'')+'</td><td class="n">'+won(it.amount)+'</td></tr>';
+    }).join('')+
+    '<tr class="sum"><td colspan="3">합계</td><td class="n">'+won(d.total)+'</td></tr></table>';
+
+  var memo = d.memo?'<label style="margin-top:14px">비고</label><div class="memo">'+nl2br(d.memo)+'</div>':'';
+  return '<table class="kv">'+rows+'</table>'+det+memo;
+}
+function stamp(d){
+  var cls='',head='결 재',body;
+  if(d.status==='approved'){ cls='approved';
+    body='<div class="mark">承認</div><div class="who">'+esc(d.approver||'대표')+'</div><div class="when">'+fmt(d.decidedAt)+'</div>';
+  }else if(d.status==='rejected'){ cls='rejected';
+    body='<div class="mark" style="font-size:15px">반려</div><div class="who">'+esc(d.approver||'대표')+'</div><div class="when">'+fmt(d.decidedAt)+'</div>';
+  }else{
+    body='<div style="font-size:12px;color:#b8860b;font-weight:700">승인 대기</div>';
+  }
+  return '<div class="stampbox '+cls+'"><div class="st-h">'+head+'</div><div class="st-b">'+body+'</div></div>';
+}
+
+/* ===== 2) 대표님 결재 화면 ===== */
+function renderApprove(d){
+  var app=document.getElementById('app');
+  var already = d.status==='approved'||d.status==='rejected';
+  app.innerHTML =
+  '<div class="card">'+
+    (already?'':'<div class="banner wait"><span class="big">🔔 결재 요청이 도착했습니다</span><span class="sm">내용을 확인하고 아래에서 승인 또는 반려하세요</span></div>')+
+    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title)+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
+    docBody(d)+
+    (already? '' :
+      '<div style="margin-top:18px">'+
+        '<label>결재자 (대표님)</label><input id="ap_name" value="김한열" placeholder="이름">'+
+        '<button class="btn approve" id="btnOk">✔ 승인하기</button>'+
+        '<button class="btn reject" id="btnNo">✕ 반려하기</button>'+
+        '<div class="hint" style="text-align:center;margin-top:8px">버튼을 누르면 승인/반려 기록(이름·시간)이 담긴 결재완료 링크가 생성됩니다.</div>'+
+      '</div>')+
+    '<div id="apOut"></div>'+
+  '</div>'+
+  (already?'':'<button class="btn ghost" id="asNew" style="max-width:680px">새 결재요청 작성하기</button>');
+
+  if(!already){
+    document.getElementById('asNew').onclick=function(){location.hash='';renderForm();};
+    document.getElementById('btnOk').onclick=function(){decide(d,'approved');};
+    document.getElementById('btnNo').onclick=function(){
+      var r=prompt('반려 사유를 입력하세요 (선택)');
+      if(r===null) return;
+      decide(d,'rejected',r);
+    };
+  }
+  function decide(d,status,reason){
+    var name=(document.getElementById('ap_name').value||'대표').trim();
+    var done=Object.assign({},d,{status:status,approver:name,decidedAt:nowISO(),reason:reason||''});
+    var url=baseUrl()+'#done='+enc(done);
+    ledgerAdd({no:done.no,title:done.title,total:done.total,status:status,doneUrl:url});
+    var out=document.getElementById('apOut');
+    var isOk=status==='approved';
+    out.innerHTML=
+      '<div class="linkbox">'+
+        '<div class="banner '+(isOk?'ok':'no')+'" style="margin-bottom:10px"><span class="big">'+(isOk?'✅ 승인 완료':'⛔ 반려 처리')+'</span>'+
+          '<span class="sm">'+esc(name)+' · '+fmt(done.decidedAt)+'</span></div>'+
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:7px">아래 <b>결재완료 링크</b>를 요청자에게 카톡으로 회신하세요</div>'+
+        '<div class="lk">'+esc(url)+'</div>'+
+        '<button class="btn primary" style="margin-top:10px" id="cpDone">결재완료 링크 복사</button>'+
+      '</div>';
+    document.getElementById('cpDone').onclick=function(){copy(url,'결재완료 링크 복사됨 — 요청자에게 회신하세요');};
+    // 버튼 숨김
+    ['btnOk','btnNo','ap_name'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
+    out.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+/* ===== 3) 결재완료(증빙) 화면 ===== */
+function renderDone(d){
+  ledgerAdd({no:d.no,title:d.title,total:d.total,status:d.status,doneUrl:location.href});
+  var app=document.getElementById('app');
+  var isOk=d.status==='approved';
+  app.innerHTML=
+  '<div class="card">'+
+    '<div class="banner '+(isOk?'ok':'no')+'"><span class="big">'+(isOk?'✅ 결재 승인 완료':'⛔ 결재 반려')+'</span>'+
+      '<span class="sm">결재자 '+esc(d.approver||'-')+' · '+fmt(d.decidedAt)+'</span></div>'+
+    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title)+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
+    docBody(d)+
+    (d.reason?'<label style="margin-top:14px">반려 사유</label><div class="memo">'+nl2br(d.reason)+'</div>':'')+
+    '<div class="hint" style="margin-top:16px;text-align:center">이 화면이 <b>결재 증빙</b>입니다. 캡처해서 보관하거나 이 링크를 저장하세요.</div>'+
+  '</div>'+
+  '<button class="btn ghost" id="newOne" style="max-width:680px">새 결재요청 작성하기</button>';
+  document.getElementById('newOne').onclick=function(){location.hash='';renderForm();};
+}
+
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
