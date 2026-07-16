@@ -90,16 +90,29 @@
   .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
   .pill.pay{background:#eef3ff;color:var(--accent)}
   .foot{text-align:center;font-size:11px;color:#9aa7b4;margin-top:18px}
-  .ledger table{width:100%;border-collapse:collapse;font-size:12px}
-  .ledger td,.ledger th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:left}
-  .ledger th{color:var(--sub);font-size:11px}
-  .ledger a{color:var(--accent);text-decoration:none}
-  .ledger .s{font-weight:700}.ledger .s.a{color:var(--ok)}.ledger .s.r{color:var(--no)}.ledger .s.w{color:var(--wait)}
   .tabs{display:flex;gap:6px;margin-bottom:14px}
   .tabs button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:9px;
     font-weight:700;color:var(--sub);cursor:pointer;font-size:13px}
   .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
   .empty{color:#9aa7b4;font-size:12.5px;text-align:center;padding:16px 0;border:1px dashed var(--line);border-radius:9px;margin-top:10px}
+  /* 결재 현황 */
+  .live{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--ok);
+    margin-left:auto;background:var(--okbg);padding:3px 9px;border-radius:20px}
+  .live .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .strow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;
+    border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer;background:#fff}
+  .strow:active{background:#f7f9fc}
+  .sttitle{font-weight:700;font-size:14px;color:var(--ink)}
+  .stsub{font-size:11.5px;color:var(--sub);margin-top:2px}
+  .stbadge{flex-shrink:0;font-size:12.5px;font-weight:800;padding:7px 13px;border-radius:20px;white-space:nowrap}
+  .stbadge.w{background:var(--waitbg);color:var(--wait)}
+  .stbadge.a{background:var(--okbg);color:var(--ok)}
+  .stbadge.r{background:var(--nobg);color:var(--no)}
+  .stfilter{display:flex;gap:6px;margin:2px 0 12px}
+  .stfilter button{flex:1;padding:7px;border:1px solid var(--line);background:#fff;border-radius:8px;
+    font-size:12px;font-weight:700;color:var(--sub);cursor:pointer}
+  .stfilter button.on{background:var(--navy2);color:#fff;border-color:var(--navy2)}
 </style>
 </head>
 <body>
@@ -109,15 +122,19 @@
     <div><b>하나사인몰 전자결재</b><br><span>지출 · 이체 결재 요청 / 승인</span></div>
   </header>
   <div id="app"></div>
-  <div class="foot">하나사인몰 웹팀 · 카톡 결재 대체용 · 서버 없이 링크로 주고받는 결재</div>
+  <div class="foot">하나사인몰 웹팀 · 카톡 결재 대체용 · 대표님 승인 시 결재현황 실시간 반영</div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
+/* ===== Firebase Realtime Database (REST + SSE, SDK 불필요) ===== */
+var DB='https://hanasm-approval-default-rtdb.firebaseio.com';
+function fbPut(path,obj){ return fetch(DB+path+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(obj)}); }
+function fbGet(path){ return fetch(DB+path+'.json').then(function(r){return r.json();}); }
+
 /* ===== 유틸: 한글 안전 URL-safe base64 ===== */
 function enc(obj){
-  var s = JSON.stringify(obj);
-  var b64 = btoa(unescape(encodeURIComponent(s)));
+  var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
   return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
 function dec(str){
@@ -141,13 +158,12 @@ function fmt(iso){
 }
 function docNo(){
   var d=new Date();
-  var r=Math.floor(Math.random()*900+100);
-  return 'HS-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+r;
+  return 'HS-'+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+'-'+pad(d.getHours())+pad(d.getMinutes())+pad(d.getSeconds());
 }
 function baseUrl(){ return location.origin + location.pathname; }
 function toast(m){
   var t=document.getElementById('toast'); t.textContent=m; t.classList.add('show');
-  clearTimeout(window._tt); window._tt=setTimeout(function(){t.classList.remove('show');},1800);
+  clearTimeout(window._tt); window._tt=setTimeout(function(){t.classList.remove('show');},2000);
 }
 function copy(text,msg){
   if(navigator.clipboard&&navigator.clipboard.writeText){
@@ -161,34 +177,38 @@ function fallbackCopy(text,msg){
   document.body.removeChild(ta);
 }
 
-/* ===== 로컬 결재대장 (이 기기 편의용) ===== */
-var LKEY='hs_approval_ledger_v2';
-function ledgerLoad(){ try{return JSON.parse(localStorage.getItem(LKEY)||'[]');}catch(e){return[];} }
-function ledgerSave(a){ try{localStorage.setItem(LKEY,JSON.stringify(a.slice(-50)));}catch(e){} }
-function ledgerAdd(rec){
-  var a=ledgerLoad();
-  var i=a.findIndex(function(x){return x.no===rec.no;});
-  if(i>=0) a[i]=Object.assign(a[i],rec); else a.push(rec);
-  ledgerSave(a);
+/* ===== 실시간 스트림 정리 ===== */
+function closeES(){
+  if(window._es){ try{window._es.close();}catch(e){} window._es=null; }
+  if(window._poll){ clearInterval(window._poll); window._poll=null; }
 }
 
 /* ===== 상태 결정 ===== */
 function route(){
+  closeES();
   var h=location.hash.slice(1);
   if(h.indexOf('done=')===0){ var d=dec(h.slice(5)); if(d) return renderDone(d); }
   if(h.indexOf('req=')===0){ var r=dec(h.slice(4)); if(r) return renderApprove(r); }
+  if(h==='list') return renderStatus();
   return renderForm();
 }
+function tabsHtml(active){
+  return '<div class="tabs">'+
+    '<button class="'+(active==='new'?'on':'')+'" id="tabNew">새 결재요청</button>'+
+    '<button class="'+(active==='list'?'on':'')+'" id="tabList">결재 현황</button></div>';
+}
+function bindTabs(){
+  var n=document.getElementById('tabNew'), l=document.getElementById('tabList');
+  if(n) n.onclick=function(){ if(location.hash){location.hash='';} else renderForm(); };
+  if(l) l.onclick=function(){ location.hash='list'; };
+}
 
-/* ===== 1) 작성 폼 (누적형) ===== */
+/* ===== 1) 작성 폼 (누적형 + Firebase 저장) ===== */
 function renderForm(pre){
   pre = pre || {};
   var app=document.getElementById('app');
-  app.innerHTML =
-  '<div class="tabs"><button class="on" id="tabNew">새 결재요청</button><button id="tabLedger">결재 대장</button></div>'+
-  '<div id="pane"></div>';
-  document.getElementById('tabNew').onclick=function(){renderForm();};
-  document.getElementById('tabLedger').onclick=function(){renderLedger();};
+  app.innerHTML = tabsHtml('new')+'<div id="pane"></div>';
+  bindTabs();
 
   var items = (pre.items&&pre.items.length)? pre.items.slice() : [];
 
@@ -269,51 +289,92 @@ function renderForm(pre){
       items: items.slice(),
       buyTotal: t.bt, sellTotal: t.st,
       title: requester+' 지출결재 ('+items.length+'건)',
-      reqAt: pre.reqAt||nowISO()
+      reqAt: pre.reqAt||nowISO(),
+      status: 'wait'
     };
-    var url = baseUrl()+'#req='+enc(data);
-    ledgerAdd({no:data.no,title:data.title,total:data.sellTotal,status:'wait',reqAt:data.reqAt,reqUrl:url});
+    var reqUrl = baseUrl()+'#req='+enc(data);
+    var listUrl = baseUrl()+'#list';
+    // Firebase에 저장 (현황에 '대기'로 뜸)
+    fbPut('/approvals/'+data.no, data).then(function(){toast('결재 현황에 등록되었습니다');})
+      .catch(function(){toast('현황 저장 실패(네트워크) — 링크는 정상 작동');});
     var out=document.getElementById('linkOut');
     out.innerHTML =
       '<div class="linkbox">'+
-        '<div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:8px">✅ 결재요청 링크가 생성되었습니다 ('+items.length+'건)</div>'+
-        '<div class="lk">'+esc(url)+'</div>'+
-        '<button class="btn primary" style="margin-top:10px" id="cp">링크 복사</button>'+
-        '<button class="btn ghost" style="margin-top:8px" id="pv">내가 먼저 미리보기</button>'+
+        '<div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:8px">✅ 결재요청 생성 완료 ('+items.length+'건)</div>'+
+        '<div class="lk">'+esc(reqUrl)+'</div>'+
+        '<button class="btn primary" style="margin-top:10px" id="cp">① 요청링크 복사 → 대표님께 카톡 전송</button>'+
+        '<button class="btn ghost" style="margin-top:8px" id="openStatus">② 결재 현황 열기 (실시간 확인)</button>'+
         '<ol class="steps">'+
-          '<li>이 링크를 <b>복사</b>해서 대표님께 카톡으로 전송하세요.</li>'+
-          '<li>대표님이 링크를 열면 결재 문서가 보이고, <b>승인/반려</b> 버튼이 나옵니다.</li>'+
-          '<li>대표님이 승인하면 <b>결재완료 링크</b>가 생성되며, 회신받으면 승인 기록(이름·시간)이 남습니다.</li>'+
+          '<li>①번 링크를 <b>대표님께 카톡</b>으로 보내세요.</li>'+
+          '<li>대표님이 링크를 열어 <b>승인/반려</b>만 누르면 끝 — <b>회신 안 하셔도</b> 됩니다.</li>'+
+          '<li>②번 <b>결재 현황</b>에서 대기 → 승인/반려가 <b>실시간으로 자동</b> 바뀝니다.</li>'+
         '</ol>'+
       '</div>';
-    document.getElementById('cp').onclick=function(){copy(url,'결재요청 링크 복사됨 — 카톡으로 보내세요');};
-    document.getElementById('pv').onclick=function(){location.hash='req='+enc(data);};
+    document.getElementById('cp').onclick=function(){copy(reqUrl,'요청링크 복사됨 — 대표님께 카톡으로 보내세요');};
+    document.getElementById('openStatus').onclick=function(){location.hash='list';};
     out.scrollIntoView({behavior:'smooth',block:'nearest'});
   };
 
   drawList();
 }
 
-/* ===== 결재 대장 (이 기기) ===== */
-function renderLedger(){
+/* ===== 결재 현황 (Firebase 실시간) ===== */
+function renderStatus(){
   var app=document.getElementById('app');
-  app.innerHTML =
-  '<div class="tabs"><button id="tabNew">새 결재요청</button><button class="on" id="tabLedger">결재 대장</button></div>'+
-  '<div class="card ledger"><h2 class="sec">결재 대장 (이 기기 기록)</h2><div id="lgbody"></div>'+
-  '<div class="hint" style="margin-top:12px">이 목록은 <b>이 기기(브라우저)</b>에만 저장되는 편의 기록입니다. 공식 증빙은 각 건의 결재완료 링크입니다.</div></div>';
-  document.getElementById('tabNew').onclick=function(){renderForm();};
-  document.getElementById('tabLedger').onclick=function(){renderLedger();};
-  var a=ledgerLoad().slice().reverse();
-  var body=document.getElementById('lgbody');
-  if(!a.length){ body.innerHTML='<div class="empty">아직 기록이 없습니다.</div>'; return; }
-  var smap={wait:['w','대기'],approved:['a','승인'],rejected:['r','반려']};
-  body.innerHTML='<table><tr><th>건명</th><th>판매가합계</th><th>상태</th><th>링크</th></tr>'+
-    a.map(function(x){
-      var s=smap[x.status]||smap.wait;
-      var lk=x.status==='wait'?(x.reqUrl?'<a href="'+esc(x.reqUrl)+'">요청</a>':''):(x.doneUrl?'<a href="'+esc(x.doneUrl)+'">결과</a>':'');
-      return '<tr><td>'+esc(x.title)+'<br><span style="color:#9aa7b4;font-size:10.5px">'+esc(x.no)+'</span></td>'+
-        '<td class="s">'+won(x.total)+'</td><td class="s '+s[0]+'">'+s[1]+'</td><td>'+lk+'</td></tr>';
-    }).join('')+'</table>';
+  app.innerHTML = tabsHtml('list')+
+  '<div class="card">'+
+    '<h2 class="sec">결재 현황 <span class="live"><span class="dot"></span>실시간</span></h2>'+
+    '<div class="stfilter">'+
+      '<button class="on" data-f="all">전체</button>'+
+      '<button data-f="wait">대기</button>'+
+      '<button data-f="approved">승인</button>'+
+      '<button data-f="rejected">반려</button>'+
+    '</div>'+
+    '<div id="stBody"><div class="empty">불러오는 중…</div></div>'+
+    '<div class="hint">대표님이 승인/반려하면 이 화면이 <b>자동</b>으로 바뀝니다(새로고침 불필요). 항목을 누르면 상세 결재문서가 열립니다.</div>'+
+  '</div>';
+  bindTabs();
+  var store={}, filter='all';
+  var body=document.getElementById('stBody');
+  document.querySelectorAll('.stfilter button').forEach(function(b){
+    b.onclick=function(){
+      document.querySelectorAll('.stfilter button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); filter=b.dataset.f; draw();
+    };
+  });
+  function badge(s){
+    if(s==='approved') return {c:'a',t:'승인'};
+    if(s==='rejected') return {c:'r',t:'반려'};
+    return {c:'w',t:'대기'};
+  }
+  function draw(){
+    var arr=Object.keys(store).map(function(k){return store[k];}).filter(Boolean);
+    arr.sort(function(a,b){return (b.reqAt||'').localeCompare(a.reqAt||'');});
+    if(filter!=='all') arr=arr.filter(function(d){return (d.status||'wait')===filter;});
+    if(!arr.length){ body.innerHTML='<div class="empty">해당 상태의 결재가 없습니다.</div>'; return; }
+    body.innerHTML=arr.map(function(d){
+      var bd=badge(d.status);
+      var decided=(d.status==='approved'||d.status==='rejected');
+      return '<div class="strow" data-no="'+esc(d.no)+'">'+
+        '<div><div class="sttitle">'+esc(d.title||d.no)+'</div>'+
+          '<div class="stsub">'+esc(d.requester||'')+' · 판매가 '+won(d.sellTotal)+' · '+fmt(d.reqAt)+'</div>'+
+          (decided?'<div class="stsub">결재: '+esc(d.approver||'')+' · '+fmt(d.decidedAt)+(d.reason?' · 사유: '+esc(d.reason):'')+'</div>':'')+
+        '</div>'+
+        '<div class="stbadge '+bd.c+'">'+bd.t+'</div></div>';
+    }).join('');
+    body.querySelectorAll('.strow').forEach(function(r){
+      r.onclick=function(){ var d=store[r.dataset.no]; if(d) location.hash='req='+enc(d); };
+    });
+  }
+  function refresh(){ fbGet('/approvals').then(function(d){ store=d||{}; draw(); }).catch(function(){}); }
+  refresh();
+  try{
+    var es=new EventSource(DB+'/approvals.json');
+    window._es=es;
+    es.addEventListener('put', refresh);
+    es.addEventListener('patch', refresh);
+  }catch(e){}
+  window._poll=setInterval(refresh, 12000);
 }
 
 /* ===== 문서 본문 렌더 (결재/완료 공용) ===== */
@@ -354,42 +415,53 @@ function renderApprove(d){
     (already?'':'<div class="banner wait"><span class="big">🔔 결재 요청이 도착했습니다</span><span class="sm">내용을 확인하고 아래에서 승인 또는 반려하세요</span></div>')+
     '<div class="doc-head"><div><div class="doc-title">'+esc(d.title||'지출/이체 결재요청')+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
     docBody(d)+
+    (d.reason?'<label style="margin-top:14px">반려 사유</label><div style="white-space:pre-wrap;font-size:13px">'+nl2br(d.reason)+'</div>':'')+
     (already? '' :
       '<div style="margin-top:18px">'+
         '<label>결재자 (대표님)</label><input id="ap_name" value="김한열" placeholder="이름">'+
         '<button class="btn approve" id="btnOk">✔ 승인하기</button>'+
         '<button class="btn reject" id="btnNo">✕ 반려하기</button>'+
-        '<div class="hint" style="text-align:center;margin-top:8px">버튼을 누르면 승인/반려 기록(이름·시간)이 담긴 결재완료 링크가 생성됩니다.</div>'+
+        '<div class="hint" style="text-align:center;margin-top:8px">버튼을 누르면 요청자 화면(결재 현황)에 자동 반영됩니다. 따로 회신 안 하셔도 됩니다.</div>'+
       '</div>')+
     '<div id="apOut"></div>'+
   '</div>'+
-  (already?'':'<button class="btn ghost" id="asNew" style="max-width:680px">새 결재요청 작성하기</button>');
+  '<button class="btn ghost" id="goList" style="max-width:680px">📋 결재 현황 보기</button>';
+
+  document.getElementById('goList').onclick=function(){location.hash='list';};
 
   if(!already){
-    document.getElementById('asNew').onclick=function(){location.hash='';renderForm();};
     document.getElementById('btnOk').onclick=function(){decide(d,'approved');};
     document.getElementById('btnNo').onclick=function(){
       var r=prompt('반려 사유를 입력하세요 (선택)');
       if(r===null) return;
       decide(d,'rejected',r);
     };
+    // 이미 다른 곳에서 결재됐는지 확인 (중복 방지)
+    fbGet('/approvals/'+d.no).then(function(cur){
+      if(cur && (cur.status==='approved'||cur.status==='rejected')){
+        renderApprove(Object.assign({},d,cur));
+      }
+    }).catch(function(){});
   }
+
   function decide(d,status,reason){
     var name=(document.getElementById('ap_name').value||'대표').trim();
     var done=Object.assign({},d,{status:status,approver:name,decidedAt:nowISO(),reason:reason||''});
-    var url=baseUrl()+'#done='+enc(done);
-    ledgerAdd({no:done.no,title:done.title,total:done.sellTotal,status:status,doneUrl:url});
     var out=document.getElementById('apOut');
     var isOk=status==='approved';
+    // Firebase 저장 (요청자 현황에 자동 반영)
+    fbPut('/approvals/'+done.no, done)
+      .then(function(){})
+      .catch(function(){toast('저장 실패(네트워크) — 다시 시도해주세요');});
     out.innerHTML=
       '<div class="linkbox">'+
         '<div class="banner '+(isOk?'ok':'no')+'" style="margin-bottom:10px"><span class="big">'+(isOk?'✅ 승인 완료':'⛔ 반려 처리')+'</span>'+
           '<span class="sm">'+esc(name)+' · '+fmt(done.decidedAt)+'</span></div>'+
-        '<div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:7px">아래 <b>결재완료 링크</b>를 요청자에게 카톡으로 회신하세요</div>'+
-        '<div class="lk">'+esc(url)+'</div>'+
-        '<button class="btn primary" style="margin-top:10px" id="cpDone">결재완료 링크 복사</button>'+
+        '<div style="font-weight:700;color:var(--navy);font-size:13px;text-align:center">요청자 화면(결재 현황)에 자동 반영되었습니다.<br>따로 회신하지 않으셔도 됩니다.</div>'+
+        '<button class="btn ghost" style="margin-top:12px" id="cpDone">결재 증빙 링크 복사 (선택)</button>'+
       '</div>';
-    document.getElementById('cpDone').onclick=function(){copy(url,'결재완료 링크 복사됨 — 요청자에게 회신하세요');};
+    var url=baseUrl()+'#done='+enc(done);
+    document.getElementById('cpDone').onclick=function(){copy(url,'결재 증빙 링크 복사됨');};
     ['btnOk','btnNo','ap_name'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
     out.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
@@ -397,7 +469,6 @@ function renderApprove(d){
 
 /* ===== 3) 결재완료(증빙) 화면 ===== */
 function renderDone(d){
-  ledgerAdd({no:d.no,title:d.title,total:d.sellTotal,status:d.status,doneUrl:location.href});
   var app=document.getElementById('app');
   var isOk=d.status==='approved';
   app.innerHTML=
@@ -409,8 +480,8 @@ function renderDone(d){
     (d.reason?'<label style="margin-top:14px">반려 사유</label><div style="white-space:pre-wrap;font-size:13px">'+nl2br(d.reason)+'</div>':'')+
     '<div class="hint" style="margin-top:16px;text-align:center">이 화면이 <b>결재 증빙</b>입니다. 캡처해서 보관하거나 이 링크를 저장하세요.</div>'+
   '</div>'+
-  '<button class="btn ghost" id="newOne" style="max-width:680px">새 결재요청 작성하기</button>';
-  document.getElementById('newOne').onclick=function(){location.hash='';renderForm();};
+  '<button class="btn ghost" id="goList" style="max-width:680px">📋 결재 현황 보기</button>';
+  document.getElementById('goList').onclick=function(){location.hash='list';};
 }
 
 window.addEventListener('hashchange',route);
