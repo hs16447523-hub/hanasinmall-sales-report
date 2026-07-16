@@ -30,18 +30,17 @@
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,111,237,.12)}
   textarea{min-height:64px;resize:vertical}
   .row2{display:flex;gap:10px}.row2>div{flex:1}
-  .items{margin-top:6px}
-  .item{display:grid;grid-template-columns:1fr 62px 96px 34px;gap:6px;margin-bottom:7px;align-items:center}
-  .item input{padding:9px 9px;font-size:14px}
-  .item .del{border:1px solid var(--line);background:#fff;border-radius:8px;height:38px;cursor:pointer;
-    color:var(--no);font-size:17px;line-height:1}
-  .item .amt{text-align:right}
-  .additem{width:100%;padding:9px;border:1px dashed #b9c4d0;background:#fafcff;border-radius:9px;
-    color:var(--navy2);font-weight:600;cursor:pointer;font-size:13.5px;margin-top:2px}
-  .hint{font-size:11.5px;color:#8494a3;margin-top:5px}
-  .totalbar{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:13px 14px;
-    background:var(--navy);color:#fff;border-radius:11px;font-size:15px}
-  .totalbar b{font-size:20px}
+  .divider{border-top:1px solid var(--line);margin:16px 0 2px}
+  .addrow{display:flex;gap:8px;margin-top:2px}
+  .addrow>div{flex:1}
+  .additem{width:100%;padding:11px;border:1px dashed #b9c4d0;background:#fafcff;border-radius:9px;
+    color:var(--navy2);font-weight:700;cursor:pointer;font-size:14px;margin-top:10px}
+  .hint{font-size:11.5px;color:#8494a3;margin-top:7px}
+  .totalbar{margin-top:14px;padding:12px 14px;background:var(--navy);color:#fff;border-radius:11px;font-size:14px}
+  .totalbar .r{display:flex;justify-content:space-between;align-items:center;padding:2px 0}
+  .totalbar .r b{font-size:19px}
+  .totalbar .r.sub{opacity:.85;font-size:13px}
+  .totalbar .r.sub b{font-size:15px}
   .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:700;
     cursor:pointer;margin-top:14px;font-family:inherit}
   .btn.primary{background:var(--accent);color:#fff}
@@ -49,9 +48,7 @@
   .btn.reject{background:#fff;color:var(--no);border:1.5px solid var(--no);margin-top:10px}
   .btn.ghost{background:#fff;color:var(--navy2);border:1.5px solid var(--line)}
   .btn:active{transform:translateY(1px)}
-  .btn[disabled]{opacity:.5;cursor:not-allowed}
 
-  /* 결재 문서 뷰 */
   .doc-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
     border-bottom:2px solid var(--navy);padding-bottom:12px;margin-bottom:4px}
   .doc-title{font-size:19px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
@@ -73,7 +70,9 @@
   table.det th,table.det td{border:1px solid var(--line);padding:8px 9px}
   table.det th{background:#f7f9fc;color:var(--sub);font-weight:600;font-size:12px}
   table.det td.n{text-align:right;white-space:nowrap}
-  table.det tr.sum td{background:#fbfcfe;font-weight:800;color:var(--navy);font-size:14px}
+  table.det tr.sum td{background:#fbfcfe;font-weight:800;color:var(--navy);font-size:13.5px}
+  .delrow{border:1px solid var(--line);background:#fff;border-radius:7px;height:30px;width:30px;cursor:pointer;
+    color:var(--no);font-size:16px;line-height:1;padding:0}
   .banner{padding:15px;border-radius:12px;text-align:center;margin-bottom:14px;font-weight:700}
   .banner.ok{background:var(--okbg);color:var(--ok)}
   .banner.no{background:var(--nobg);color:var(--no)}
@@ -90,9 +89,7 @@
   .toast.show{opacity:1}
   .pill{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:700}
   .pill.pay{background:#eef3ff;color:var(--accent)}
-  .memo{white-space:pre-wrap;font-size:13px;color:var(--ink)}
   .foot{text-align:center;font-size:11px;color:#9aa7b4;margin-top:18px}
-  .ledger{margin-top:4px}
   .ledger table{width:100%;border-collapse:collapse;font-size:12px}
   .ledger td,.ledger th{border-bottom:1px solid var(--line);padding:7px 4px;text-align:left}
   .ledger th{color:var(--sub);font-size:11px}
@@ -102,7 +99,7 @@
   .tabs button{flex:1;padding:9px;border:1px solid var(--line);background:#fff;border-radius:9px;
     font-weight:700;color:var(--sub);cursor:pointer;font-size:13px}
   .tabs button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
-  .empty{color:#9aa7b4;font-size:12.5px;text-align:center;padding:16px 0}
+  .empty{color:#9aa7b4;font-size:12.5px;text-align:center;padding:16px 0;border:1px dashed var(--line);border-radius:9px;margin-top:10px}
 </style>
 </head>
 <body>
@@ -130,7 +127,8 @@ function dec(str){
     return JSON.parse(decodeURIComponent(escape(atob(b64))));
   }catch(e){return null;}
 }
-function won(n){ n=Number(n)||0; return n.toLocaleString('ko-KR')+'원'; }
+function num(v){ return Number(String(v==null?'':v).replace(/[^0-9]/g,''))||0; }
+function won(n){ return (Number(n)||0).toLocaleString('ko-KR')+'원'; }
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 function nl2br(s){ return esc(s).replace(/\n/g,'<br>'); }
@@ -163,8 +161,8 @@ function fallbackCopy(text,msg){
   document.body.removeChild(ta);
 }
 
-/* ===== 로컬 결재대장 (이 기기 편의용, 없어도 동작) ===== */
-var LKEY='hs_approval_ledger_v1';
+/* ===== 로컬 결재대장 (이 기기 편의용) ===== */
+var LKEY='hs_approval_ledger_v2';
 function ledgerLoad(){ try{return JSON.parse(localStorage.getItem(LKEY)||'[]');}catch(e){return[];} }
 function ledgerSave(a){ try{localStorage.setItem(LKEY,JSON.stringify(a.slice(-50)));}catch(e){} }
 function ledgerAdd(rec){
@@ -182,7 +180,7 @@ function route(){
   return renderForm();
 }
 
-/* ===== 1) 작성 폼 ===== */
+/* ===== 1) 작성 폼 (누적형) ===== */
 function renderForm(pre){
   pre = pre || {};
   var app=document.getElementById('app');
@@ -191,114 +189,109 @@ function renderForm(pre){
   '<div id="pane"></div>';
   document.getElementById('tabNew').onclick=function(){renderForm();};
   document.getElementById('tabLedger').onclick=function(){renderLedger();};
-  var pane=document.getElementById('pane');
-  pane.innerHTML =
+
+  var items = (pre.items&&pre.items.length)? pre.items.slice() : [];
+
+  document.getElementById('pane').innerHTML =
   '<div class="card">'+
     '<h2 class="sec">결재요청 작성</h2>'+
-    '<label>건명 / 제목</label>'+
-    '<input id="f_title" placeholder="예) 인쇄마을 이체 결재요청" value="'+esc(pre.title||'')+'">'+
     '<div class="row2">'+
-      '<div><label>요청자</label><input id="f_req" list="names" placeholder="이름" value="'+esc(pre.requester||'')+'">'+
-        '<datalist id="names"><option>박상준</option><option>황국인</option><option>김은혜</option><option>홍재이</option><option>임정민</option><option>천현정</option></datalist></div>'+
-      '<div><label>거래처</label><input id="f_vendor" placeholder="예) 인쇄마을" value="'+esc(pre.vendor||'')+'"></div>'+
-    '</div>'+
-    '<div class="row2">'+
+      '<div><label>요청자</label><input id="f_req" value="'+esc(pre.requester||'이하나 대리')+'"></div>'+
       '<div><label>결제/지출 유형</label><select id="f_pay">'+
-        ['이체','카드','현금','기타'].map(function(o){return '<option'+(pre.payType===o?' selected':'')+'>'+o+'</option>';}).join('')+
+        ['이체','카드','기타'].map(function(o){return '<option'+(pre.payType===o?' selected':'')+'>'+o+'</option>';}).join('')+
       '</select></div>'+
-      '<div><label>판매가(참고, 선택)</label><input id="f_sale" inputmode="numeric" placeholder="예) 391600" value="'+esc(pre.salePrice||'')+'"></div>'+
     '</div>'+
-    '<div id="bankwrap"></div>'+
-    '<label>지출 내역</label>'+
-    '<div class="items" id="items"></div>'+
-    '<button class="additem" id="addItem">+ 항목 추가</button>'+
-    '<div class="hint">항목명 · 수량 · 금액(원)을 입력하세요. 합계는 자동 계산됩니다.</div>'+
-    '<label>비고 / 메모</label>'+
-    '<textarea id="f_memo" placeholder="특이사항, 지급 사유 등">'+esc(pre.memo||'')+'</textarea>'+
-    '<div class="totalbar">합계 금액 <b id="totalView">0원</b></div>'+
+    '<div class="divider"></div>'+
+    '<label>결재 항목 추가</label>'+
+    '<div class="addrow">'+
+      '<div><input id="i_buy" inputmode="numeric" placeholder="매입가"></div>'+
+      '<div><input id="i_sell" inputmode="numeric" placeholder="판매가"></div>'+
+    '</div>'+
+    '<input id="i_note" style="margin-top:8px" placeholder="비고 (거래처 / 품목 등)">'+
+    '<button class="additem" id="addItem">＋ 항목 추가 (아래에 누적)</button>'+
+    '<div class="hint">거래처가 한 곳이든 여러 곳이든, 여러 품목을 이 요청서 하나에 모두 담아 한 번에 결재받을 수 있습니다.</div>'+
+    '<div id="itemList"></div>'+
+    '<div class="totalbar" id="totalBar"></div>'+
     '<button class="btn primary" id="makeLink">결재요청 링크 생성</button>'+
+    '<button class="btn ghost" id="resetForm">새로 작성 (초기화)</button>'+
     '<div id="linkOut"></div>'+
   '</div>';
 
-  function renderBank(){
-    var t=document.getElementById('f_pay').value;
-    var w=document.getElementById('bankwrap');
-    if(t==='이체'){
-      w.innerHTML='<div class="row2"><div><label>은행</label><input id="f_bank" placeholder="예) 국민" value="'+esc(pre.bank||'')+'"></div>'+
-        '<div><label>예금주</label><input id="f_holder" placeholder="예) 인쇄마을" value="'+esc(pre.holder||'')+'"></div></div>'+
-        '<label>계좌번호</label><input id="f_acct" placeholder="계좌번호" value="'+esc(pre.account||'')+'">';
-    }else{ w.innerHTML=''; }
-  }
-  document.getElementById('f_pay').addEventListener('change',renderBank);
-  renderBank();
-
-  var items = (pre.items&&pre.items.length)?pre.items.slice():[{name:'',qty:'1',amount:''}];
-  function drawItems(){
-    var box=document.getElementById('items');
-    box.innerHTML=items.map(function(it,i){
-      return '<div class="item">'+
-        '<input placeholder="항목명" value="'+esc(it.name)+'" data-i="'+i+'" data-k="name">'+
-        '<input class="amt" inputmode="numeric" placeholder="수량" value="'+esc(it.qty)+'" data-i="'+i+'" data-k="qty">'+
-        '<input class="amt" inputmode="numeric" placeholder="금액" value="'+esc(it.amount)+'" data-i="'+i+'" data-k="amount">'+
-        '<button class="del" data-del="'+i+'">×</button></div>';
-    }).join('');
-    box.querySelectorAll('input').forEach(function(inp){
-      inp.addEventListener('input',function(){
-        items[+inp.dataset.i][inp.dataset.k]=inp.value; calcTotal();
+  function drawList(){
+    var box=document.getElementById('itemList');
+    if(!items.length){
+      box.innerHTML='<div class="empty">추가된 항목이 없습니다. 위에서 입력 후 [항목 추가]를 누르세요.</div>';
+    }else{
+      box.innerHTML='<table class="det"><tr><th style="width:7%">No</th><th>비고</th>'+
+        '<th style="width:22%">매입가</th><th style="width:22%">판매가</th><th style="width:11%"></th></tr>'+
+        items.map(function(it,i){
+          return '<tr><td class="n">'+(i+1)+'</td><td>'+esc(it.note)+'</td>'+
+            '<td class="n">'+won(it.buy)+'</td><td class="n">'+won(it.sell)+'</td>'+
+            '<td class="n"><button class="delrow" data-d="'+i+'">×</button></td></tr>';
+        }).join('')+'</table>';
+      box.querySelectorAll('.delrow').forEach(function(b){
+        b.onclick=function(){ items.splice(+b.dataset.d,1); drawList(); };
       });
-    });
-    box.querySelectorAll('.del').forEach(function(b){
-      b.onclick=function(){ if(items.length>1){items.splice(+b.dataset.del,1);drawItems();calcTotal();} };
-    });
+    }
+    drawTotal();
   }
-  function calcTotal(){
-    var t=items.reduce(function(s,it){return s+(Number(String(it.amount).replace(/[^0-9]/g,''))||0);},0);
-    document.getElementById('totalView').textContent=won(t);
-    return t;
+  function drawTotal(){
+    var bt=items.reduce(function(s,it){return s+num(it.buy);},0);
+    var st=items.reduce(function(s,it){return s+num(it.sell);},0);
+    document.getElementById('totalBar').innerHTML=
+      '<div class="r sub"><span>매입가 합계</span><b>'+won(bt)+'</b></div>'+
+      '<div class="r"><span>판매가 합계</span><b>'+won(st)+'</b></div>';
+    return {bt:bt,st:st};
   }
-  document.getElementById('addItem').onclick=function(){items.push({name:'',qty:'1',amount:''});drawItems();};
-  drawItems(); calcTotal();
-
+  document.getElementById('addItem').onclick=function(){
+    var buy=num(document.getElementById('i_buy').value);
+    var sell=num(document.getElementById('i_sell').value);
+    var note=document.getElementById('i_note').value.trim();
+    if(!buy && !sell && !note){toast('매입가·판매가·비고 중 하나 이상 입력하세요');return;}
+    items.push({buy:buy,sell:sell,note:note});
+    document.getElementById('i_buy').value='';
+    document.getElementById('i_sell').value='';
+    document.getElementById('i_note').value='';
+    document.getElementById('i_buy').focus();
+    drawList();
+  };
+  document.getElementById('resetForm').onclick=function(){
+    if(confirm('작성 중인 내용을 모두 비우고 새로 작성할까요?')) renderForm();
+  };
   document.getElementById('makeLink').onclick=function(){
-    var title=document.getElementById('f_title').value.trim();
-    var requester=document.getElementById('f_req').value.trim();
-    if(!title){toast('건명을 입력하세요');return;}
-    if(!requester){toast('요청자를 입력하세요');return;}
-    var clean=items.filter(function(it){return it.name||it.amount;})
-      .map(function(it){return {name:it.name,qty:it.qty,amount:Number(String(it.amount).replace(/[^0-9]/g,''))||0};});
-    if(!clean.length){toast('지출 내역을 1개 이상 입력하세요');return;}
-    var pay=document.getElementById('f_pay').value;
+    var requester=document.getElementById('f_req').value.trim()||'이하나 대리';
+    if(!items.length){toast('결재 항목을 1개 이상 추가하세요');return;}
+    var t=drawTotal();
     var data={
-      no: pre.no||docNo(), title:title, requester:requester,
-      vendor:document.getElementById('f_vendor').value.trim(),
-      payType:pay,
-      bank: pay==='이체'?(document.getElementById('f_bank')||{}).value||'':'',
-      holder: pay==='이체'?(document.getElementById('f_holder')||{}).value||'':'',
-      account: pay==='이체'?(document.getElementById('f_acct')||{}).value||'':'',
-      salePrice: (document.getElementById('f_sale').value||'').replace(/[^0-9]/g,''),
-      items:clean, total:calcTotal(),
-      memo:document.getElementById('f_memo').value.trim(),
+      no: pre.no||docNo(),
+      requester: requester,
+      payType: document.getElementById('f_pay').value,
+      items: items.slice(),
+      buyTotal: t.bt, sellTotal: t.st,
+      title: requester+' 지출결재 ('+items.length+'건)',
       reqAt: pre.reqAt||nowISO()
     };
     var url = baseUrl()+'#req='+enc(data);
-    ledgerAdd({no:data.no,title:data.title,total:data.total,status:'wait',reqAt:data.reqAt,reqUrl:url});
+    ledgerAdd({no:data.no,title:data.title,total:data.sellTotal,status:'wait',reqAt:data.reqAt,reqUrl:url});
     var out=document.getElementById('linkOut');
     out.innerHTML =
       '<div class="linkbox">'+
-        '<div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:8px">✅ 결재요청 링크가 생성되었습니다</div>'+
-        '<div class="lk" id="theLink">'+esc(url)+'</div>'+
+        '<div style="font-weight:700;color:var(--navy);font-size:13.5px;margin-bottom:8px">✅ 결재요청 링크가 생성되었습니다 ('+items.length+'건)</div>'+
+        '<div class="lk">'+esc(url)+'</div>'+
         '<button class="btn primary" style="margin-top:10px" id="cp">링크 복사</button>'+
         '<button class="btn ghost" style="margin-top:8px" id="pv">내가 먼저 미리보기</button>'+
         '<ol class="steps">'+
           '<li>이 링크를 <b>복사</b>해서 대표님께 카톡으로 전송하세요.</li>'+
           '<li>대표님이 링크를 열면 결재 문서가 보이고, <b>승인/반려</b> 버튼이 나옵니다.</li>'+
-          '<li>대표님이 승인하면 <b>결재완료 링크</b>가 생성되며, 그 링크를 회신받으면 승인 기록(이름·시간)이 남습니다.</li>'+
+          '<li>대표님이 승인하면 <b>결재완료 링크</b>가 생성되며, 회신받으면 승인 기록(이름·시간)이 남습니다.</li>'+
         '</ol>'+
       '</div>';
     document.getElementById('cp').onclick=function(){copy(url,'결재요청 링크 복사됨 — 카톡으로 보내세요');};
     document.getElementById('pv').onclick=function(){location.hash='req='+enc(data);};
     out.scrollIntoView({behavior:'smooth',block:'nearest'});
   };
+
+  drawList();
 }
 
 /* ===== 결재 대장 (이 기기) ===== */
@@ -314,7 +307,7 @@ function renderLedger(){
   var body=document.getElementById('lgbody');
   if(!a.length){ body.innerHTML='<div class="empty">아직 기록이 없습니다.</div>'; return; }
   var smap={wait:['w','대기'],approved:['a','승인'],rejected:['r','반려']};
-  body.innerHTML='<table><tr><th>건명</th><th>금액</th><th>상태</th><th>링크</th></tr>'+
+  body.innerHTML='<table><tr><th>건명</th><th>판매가합계</th><th>상태</th><th>링크</th></tr>'+
     a.map(function(x){
       var s=smap[x.status]||smap.wait;
       var lk=x.status==='wait'?(x.reqUrl?'<a href="'+esc(x.reqUrl)+'">요청</a>':''):(x.doneUrl?'<a href="'+esc(x.doneUrl)+'">결과</a>':'');
@@ -329,20 +322,16 @@ function docBody(d){
   rows+='<tr><th>문서번호</th><td>'+esc(d.no)+'</td></tr>';
   rows+='<tr><th>요청자</th><td>'+esc(d.requester)+'</td></tr>';
   rows+='<tr><th>요청일시</th><td>'+fmt(d.reqAt)+'</td></tr>';
-  if(d.vendor) rows+='<tr><th>거래처</th><td>'+esc(d.vendor)+'</td></tr>';
   rows+='<tr><th>지출유형</th><td><span class="pill pay">'+esc(d.payType||'-')+'</span></td></tr>';
-  if(d.payType==='이체'&&(d.bank||d.account||d.holder))
-    rows+='<tr><th>이체계좌</th><td>'+esc(d.bank)+' '+esc(d.account)+(d.holder?' ('+esc(d.holder)+')':'')+'</td></tr>';
-  if(d.salePrice) rows+='<tr><th>판매가(참고)</th><td>'+won(d.salePrice)+'</td></tr>';
-
-  var det='<table class="det"><tr><th style="width:8%">No</th><th>항목</th><th style="width:16%">수량</th><th style="width:26%">금액</th></tr>'+
+  var det='<table class="det"><tr><th style="width:7%">No</th><th>비고</th>'+
+    '<th style="width:23%">매입가</th><th style="width:23%">판매가</th></tr>'+
     (d.items||[]).map(function(it,i){
-      return '<tr><td class="n">'+(i+1)+'</td><td>'+esc(it.name)+'</td><td class="n">'+esc(it.qty||'')+'</td><td class="n">'+won(it.amount)+'</td></tr>';
+      return '<tr><td class="n">'+(i+1)+'</td><td>'+esc(it.note)+'</td>'+
+        '<td class="n">'+won(it.buy)+'</td><td class="n">'+won(it.sell)+'</td></tr>';
     }).join('')+
-    '<tr class="sum"><td colspan="3">합계</td><td class="n">'+won(d.total)+'</td></tr></table>';
-
-  var memo = d.memo?'<label style="margin-top:14px">비고</label><div class="memo">'+nl2br(d.memo)+'</div>':'';
-  return '<table class="kv">'+rows+'</table>'+det+memo;
+    '<tr class="sum"><td colspan="2">합계 ('+((d.items||[]).length)+'건)</td>'+
+      '<td class="n">'+won(d.buyTotal)+'</td><td class="n">'+won(d.sellTotal)+'</td></tr></table>';
+  return '<table class="kv">'+rows+'</table>'+det;
 }
 function stamp(d){
   var cls='',head='결 재',body;
@@ -363,7 +352,7 @@ function renderApprove(d){
   app.innerHTML =
   '<div class="card">'+
     (already?'':'<div class="banner wait"><span class="big">🔔 결재 요청이 도착했습니다</span><span class="sm">내용을 확인하고 아래에서 승인 또는 반려하세요</span></div>')+
-    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title)+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
+    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title||'지출/이체 결재요청')+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
     docBody(d)+
     (already? '' :
       '<div style="margin-top:18px">'+
@@ -389,7 +378,7 @@ function renderApprove(d){
     var name=(document.getElementById('ap_name').value||'대표').trim();
     var done=Object.assign({},d,{status:status,approver:name,decidedAt:nowISO(),reason:reason||''});
     var url=baseUrl()+'#done='+enc(done);
-    ledgerAdd({no:done.no,title:done.title,total:done.total,status:status,doneUrl:url});
+    ledgerAdd({no:done.no,title:done.title,total:done.sellTotal,status:status,doneUrl:url});
     var out=document.getElementById('apOut');
     var isOk=status==='approved';
     out.innerHTML=
@@ -401,7 +390,6 @@ function renderApprove(d){
         '<button class="btn primary" style="margin-top:10px" id="cpDone">결재완료 링크 복사</button>'+
       '</div>';
     document.getElementById('cpDone').onclick=function(){copy(url,'결재완료 링크 복사됨 — 요청자에게 회신하세요');};
-    // 버튼 숨김
     ['btnOk','btnNo','ap_name'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.display='none';});
     out.scrollIntoView({behavior:'smooth',block:'nearest'});
   }
@@ -409,16 +397,16 @@ function renderApprove(d){
 
 /* ===== 3) 결재완료(증빙) 화면 ===== */
 function renderDone(d){
-  ledgerAdd({no:d.no,title:d.title,total:d.total,status:d.status,doneUrl:location.href});
+  ledgerAdd({no:d.no,title:d.title,total:d.sellTotal,status:d.status,doneUrl:location.href});
   var app=document.getElementById('app');
   var isOk=d.status==='approved';
   app.innerHTML=
   '<div class="card">'+
     '<div class="banner '+(isOk?'ok':'no')+'"><span class="big">'+(isOk?'✅ 결재 승인 완료':'⛔ 결재 반려')+'</span>'+
       '<span class="sm">결재자 '+esc(d.approver||'-')+' · '+fmt(d.decidedAt)+'</span></div>'+
-    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title)+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
+    '<div class="doc-head"><div><div class="doc-title">'+esc(d.title||'지출/이체 결재요청')+'</div><div class="doc-no">'+esc(d.no)+' · 지출/이체 결재</div></div>'+stamp(d)+'</div>'+
     docBody(d)+
-    (d.reason?'<label style="margin-top:14px">반려 사유</label><div class="memo">'+nl2br(d.reason)+'</div>':'')+
+    (d.reason?'<label style="margin-top:14px">반려 사유</label><div style="white-space:pre-wrap;font-size:13px">'+nl2br(d.reason)+'</div>':'')+
     '<div class="hint" style="margin-top:16px;text-align:center">이 화면이 <b>결재 증빙</b>입니다. 캡처해서 보관하거나 이 링크를 저장하세요.</div>'+
   '</div>'+
   '<button class="btn ghost" id="newOne" style="max-width:680px">새 결재요청 작성하기</button>';
