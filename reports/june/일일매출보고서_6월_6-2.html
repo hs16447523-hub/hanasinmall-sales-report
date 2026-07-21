@@ -1,1 +1,28 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=일일매출보고서_6월_6-2~3.html"></head><body>일일매출보고서_6월_6-2~3.html으로 이동중...<a href="일일매출보고서_6월_6-2~3.html">바로가기</a></body></html>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=일일매출보고서_6월_6-2~3.html"></head><body>일일매출보고서_6월_6-2~3.html으로 이동중...<a href="일일매출보고서_6월_6-2~3.html">바로가기</a><!-- PASSWORD GATE -->
+<div id="hsmGate" style="position:fixed;inset:0;z-index:99999;background:#0f1115;display:flex;align-items:center;justify-content:center;font-family:Pretendard,'Apple SD Gothic Neo','Malgun Gothic',sans-serif">
+  <div style="width:min(360px,90vw);background:#181b22;border:1px solid #2a2f3a;border-radius:16px;padding:34px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="font-size:34px;margin-bottom:6px">🔒</div>
+    <div style="color:#e7eaf0;font-size:18px;font-weight:800;margin-bottom:4px">하나사인몰 보고서</div>
+    <div style="color:#9aa3b2;font-size:13px;margin-bottom:20px">열람하려면 비밀번호를 입력하세요</div>
+    <input id="hsmPw" type="password" inputmode="numeric" placeholder="비밀번호"
+      style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid #2a2f3a;background:#0f1115;color:#e7eaf0;font-size:16px;text-align:center;outline:none;letter-spacing:3px">
+    <div id="hsmErr" style="color:#f87171;font-size:12.5px;height:16px;margin:8px 0 4px"></div>
+    <button id="hsmBtn" style="width:100%;padding:12px;border:none;border-radius:10px;background:#4f8cff;color:#fff;font-size:15px;font-weight:700;cursor:pointer">확인</button>
+  </div>
+</div>
+<script>
+(function(){
+  var PW="110277", KEY="hsm_auth";
+  var gate=document.getElementById('hsmGate'),pw=document.getElementById('hsmPw'),
+      btn=document.getElementById('hsmBtn'),err=document.getElementById('hsmErr');
+  function unlock(){gate.parentNode.removeChild(gate);document.body.style.overflow='';}
+  if(sessionStorage.getItem(KEY)==='1'){unlock();return;}
+  document.body.style.overflow='hidden';
+  function tryPw(){if(pw.value===PW){sessionStorage.setItem(KEY,'1');unlock();}
+    else{err.textContent='비밀번호가 일치하지 않습니다';pw.value='';pw.focus();}}
+  btn.addEventListener('click',tryPw);
+  pw.addEventListener('keydown',function(e){if(e.key==='Enter')tryPw();});
+  setTimeout(function(){pw.focus();},100);
+})();
+</script>
+<!-- /PASSWORD GATE --></body></html>
