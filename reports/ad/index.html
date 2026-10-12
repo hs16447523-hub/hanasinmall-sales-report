@@ -1,0 +1,43 @@
+<!DOCTYPE html><html lang='ko'><head><meta charset='UTF-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>광고비 · AI 보고서</title><style>
+:root{--p:#1a3a5c;--p2:#2e6da4;--o:#d35400;--r:#c0392b;--bd:#d5e0eb;--tx:#1c2b3a}
+*{box-sizing:border-box}body{margin:0;font-family:'Malgun Gothic','맑은 고딕','Apple SD Gothic Neo',Arial,sans-serif;background:#eef3f8;color:var(--tx);font-size:13px;line-height:1.5}
+.hdr{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:16px 18px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.hdr h1{margin:0;font-size:19px}.hdr p{margin:2px 0 0;opacity:.85;font-size:12px}.hdr .d{font-weight:700;text-align:right}
+.main{max-width:1100px;margin:0 auto;padding:16px}
+.block{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:14px}
+.block h2{margin:0 0 10px;font-size:16px;border-left:5px solid var(--c);padding-left:8px}
+table{border-collapse:collapse;width:100%}th,td{border:1px solid var(--bd);padding:5px 8px;white-space:nowrap}
+th{background:#f3f7fb;font-size:12px}.amt{text-align:right;font-variant-numeric:tabular-nums}.cnt{text-align:center}
+.sum{margin-bottom:12px}.sum .tot{font-weight:800}.sum tr.total td{background:#f3f7fb;font-weight:800}
+.dg{margin-top:8px;border:1px solid var(--bd);border-radius:8px;padding:6px 10px}.dg summary{cursor:pointer;padding:4px 0}
+.dg .meta{color:#6b7f8f;margin-left:6px}.tag{color:#fff;border-radius:4px;padding:1px 6px;font-size:11px}
+.dtl{margin:6px 0 4px;font-size:12px}.wrap{overflow-x:auto}.est{color:#c0392b;font-size:11px}
+.note{font-size:12px;color:#445}.note li{margin:3px 0}
+</style></head><body><div class='hdr'><div><h1>📣 광고비 · AI 보고서</h1><p>월간 · 법인(하나사인몰)+개인(하나몰)</p></div><div class='d'>2026-10-12 갱신<br><a href='../../' style='color:#fff;font-size:11px'>← 메인</a></div></div><div class='main'><section class='block' style='--c:#5b3e9d'><h2>월별 보고서</h2><table class='sum'><thead><tr><th>월</th><th>보고서</th></tr></thead><tbody><tr><td><strong>2026년 09월</strong></td><td><a href='%EA%B4%91%EA%B3%A0%EB%B9%84%EB%B3%B4%EA%B3%A0%EC%84%9C_2026-09.html'>열기</a></td></tr></tbody></table></section></div><!-- PASSWORD GATE -->
+<div id="hsmGate" style="position:fixed;inset:0;z-index:99999;background:#0f1115;display:flex;align-items:center;justify-content:center;font-family:Pretendard,'Apple SD Gothic Neo','Malgun Gothic',sans-serif">
+  <div style="width:min(360px,90vw);background:#181b22;border:1px solid #2a2f3a;border-radius:16px;padding:34px 28px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="font-size:34px;margin-bottom:6px">🔒</div>
+    <div style="color:#e7eaf0;font-size:18px;font-weight:800;margin-bottom:4px">하나사인몰 보고서</div>
+    <div style="color:#9aa3b2;font-size:13px;margin-bottom:20px">열람하려면 비밀번호를 입력하세요</div>
+    <input id="hsmPw" type="password" inputmode="numeric" placeholder="비밀번호"
+      style="width:100%;padding:12px 14px;border-radius:10px;border:1px solid #2a2f3a;background:#0f1115;color:#e7eaf0;font-size:16px;text-align:center;outline:none;letter-spacing:3px">
+    <div id="hsmErr" style="color:#f87171;font-size:12.5px;height:16px;margin:8px 0 4px"></div>
+    <button id="hsmBtn" style="width:100%;padding:12px;border:none;border-radius:10px;background:#4f8cff;color:#fff;font-size:15px;font-weight:700;cursor:pointer">확인</button>
+  </div>
+</div>
+<script>
+(function(){
+  var PW="110277", KEY="hsm_auth";
+  var gate=document.getElementById('hsmGate'),pw=document.getElementById('hsmPw'),
+      btn=document.getElementById('hsmBtn'),err=document.getElementById('hsmErr');
+  function unlock(){gate.parentNode.removeChild(gate);document.body.style.overflow='';}
+  if(sessionStorage.getItem(KEY)==='1'){unlock();return;}
+  document.body.style.overflow='hidden';
+  function tryPw(){if(pw.value===PW){sessionStorage.setItem(KEY,'1');unlock();}
+    else{err.textContent='비밀번호가 일치하지 않습니다';pw.value='';pw.focus();}}
+  btn.addEventListener('click',tryPw);
+  pw.addEventListener('keydown',function(e){if(e.key==='Enter')tryPw();});
+  setTimeout(function(){pw.focus();},100);
+})();
+</script>
+<!-- /PASSWORD GATE --></body></html>
